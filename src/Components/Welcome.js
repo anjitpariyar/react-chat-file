@@ -5,7 +5,7 @@ function Welcome(props) {
      const [count, setCount] =useState(6);
      const timerToClearSomewhere = useRef(null) 
      const welcomeRef = useRef(null);
-
+     
      
      useEffect(() => {
           
@@ -30,7 +30,7 @@ function Welcome(props) {
           <div className="section__rule">
           <div className="Wrapper">
           <div className="image">
-          <img src="./gallery/03.png" />
+                              <img src="./gallery/03.png" alt="None will know who you are"/>
           </div>
           <h2 className="section__title">None will know who you are
           but <br/> don't kill anyone</h2>

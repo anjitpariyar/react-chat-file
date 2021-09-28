@@ -19,7 +19,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 function Personalized(props) {
      
-     let {notification, askNotification} = props;
+     let {notification, askNotification, theme, askTheme} = props;
      let { audio, askAudio } = props;
      
      // console.log('askNotification ' + askNotification )
@@ -41,6 +41,8 @@ function Personalized(props) {
           setCheckedAudio((prev) => !prev);
           audio(checkedAudio)
      };
+
+     
      
      const handleClick = (event) => {
           setAnchorEl(event.currentTarget);
@@ -56,6 +58,10 @@ function Personalized(props) {
           setValue(event.target.value);
           document.querySelector('body').removeAttribute("class");
           document.querySelector('body').classList.add(event.target.value);
+          // theme(event.target.value);
+          // console.log(askTheme);
+          localStorage.setItem('theme', 'hi');
+
      };
      
      

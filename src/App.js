@@ -23,16 +23,14 @@ function App() {
   const [message, setMessage] = useState([]);
   const [notification, setNotification] = useState();
   const [totalMessage, setTotalMessage] = useState();
+
   
   
   const [askNotification, setAskNotification] = useState(false);
   const [askAudio, setAskAudio] = useState(false);
-  
-  
-  
-  
-  
-  
+
+  const [theme, setTheme] = useState('purple');
+
   
   
   const getUserGeoLocation = () =>{
@@ -46,9 +44,8 @@ function App() {
         // console.log('get')
       }
       else{
-        localStorage.setItem('name', `${name}`);
+        localStorage.setItem('name', `${data.IPv4}`);
         // console.log('I am setting')
-
       }
       
     })
@@ -73,7 +70,17 @@ function App() {
   }, [])
   
   useEffect(() => {
-    getUserGeoLocation()
+    getUserGeoLocation();
+    if (localStorage.getItem('theme')) {
+      setTheme(localStorage.getItem('theme'))
+      document.querySelector('body').removeAttribute("class");
+      document.querySelector('body').classList.add(theme)
+      console.log(theme)
+
+    }
+    else {
+      localStorage.setItem('theme', `${theme}`);
+    }
   }, [])
   
   
@@ -84,7 +91,6 @@ function App() {
       Notification.requestPermission().then(permission => { 
         if (permission === 'granted'){
           setAskNotification(true)
-
         }
         else  {
           setAskNotification(false)
@@ -98,6 +104,8 @@ function App() {
     else{
       setAskNotification(false)
     }
+
+
   }, [])
   
   
@@ -128,7 +136,7 @@ function App() {
     <div className="App">
     <div className="top--part">
     <section className="section__rule">
-          <Personalized notification={askNotification => setAskNotification(askNotification)} askNotification={askNotification} audio={audio => setAskAudio(audio)} askAudio={askAudio}   />
+          <Personalized notification={askNotification => setAskNotification(askNotification)} askNotification={askNotification} audio={audio => setAskAudio(audio)} askAudio={askAudio} theme={theme => setTheme(theme)} askTheme = {theme}  />
 
     <div   className="chat--wrapper">
     <FlipMove>{ 
