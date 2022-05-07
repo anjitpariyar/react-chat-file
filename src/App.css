@@ -1,77 +1,81 @@
 :root {
-  --primary: #7F4DFC;
-  --yellow:#FCE44E;
-  --dark: #1E113D;
+  --primary: #7f4dfc;
+  --yellow: #fce44e;
+  --dark: #1e113d;
   --br: 16px;
-  
 }
 @import url("https://use.typekit.net/isb7oln.css");
 
-body{
+body {
   background-color: var(--primary);
   height: 100vh;
   position: relative;
-  font-family: acuta,serif;
+  font-family: acuta, serif;
   font-weight: 500;
   font-style: normal;
   color: var(--dark);
-  font-size:18px;
+  font-size: 18px;
   padding-right: 0 !important;
 }
-body.yellow, body.yellow form, body.yellow .MuiPopover-paper{
+body.yellow,
+body.yellow form,
+body.yellow .MuiPopover-paper {
   background-color: var(--yellow);
 }
 
-body.yellow .chatbox-wrapper.active h2{
+body.yellow .chatbox-wrapper.active h2 {
   background-color: var(--primary);
   /* color: var(--white); */
 }
 
-
-body.yellow .MuiPopover-paper .MuiSwitch-colorPrimary.Mui-checked{
+body.yellow .MuiPopover-paper .MuiSwitch-colorPrimary.Mui-checked {
   color: var(--primary);
 }
-body.yellow .MuiPopover-paper .MuiRadio-colorSecondary.Mui-checked, body.yellow .MuiPopover-paper .MuiRadio-colorSecondary.Mui-checked + span{
+body.yellow .MuiPopover-paper .MuiRadio-colorSecondary.Mui-checked,
+body.yellow .MuiPopover-paper .MuiRadio-colorSecondary.Mui-checked + span {
   color: var(--dark);
-  
 }
-body.dark, body.dark form, body.dark .MuiPopover-paper{
-  background-color: #3C3C3C;
+body.dark,
+body.dark form,
+body.dark .MuiPopover-paper {
+  background-color: #3c3c3c;
   color: #f2f2f2;
 }
 
-
-body.dark .form-control{
+body.dark .form-control {
   border-color: #868686;
   color: #f2f2f2;
 }
 
-body.dark .form-control::placeholder, body.dark svg, body.dark svg *, body.dark form button, body.dark .MuiPopover-paper .MuiFormControlLabel-root {
+body.dark .form-control::placeholder,
+body.dark svg,
+body.dark svg *,
+body.dark form button,
+body.dark .MuiPopover-paper .MuiFormControlLabel-root {
   color: #f2f2f2;
   fill: #f2f2f2;
 }
 
-body.dark .chatbox-wrapper.active h2{
+body.dark .chatbox-wrapper.active h2 {
   background-color: #f2f2f2;
   color: var(--dark);
 }
-body.dark .MuiPopover-root .MuiPopover-paper, body.dark .chatbox-wrapper h2{
+body.dark .MuiPopover-root .MuiPopover-paper,
+body.dark .chatbox-wrapper h2 {
   box-shadow: -4px 5px #181818;
-  border-color: #181818 ;
-  
+  border-color: #181818;
 }
 
-.section__rule{
+.section__rule {
   width: 90%;
   margin: 00px auto;
-  
-} 
-.chat--wrapper{
+}
+.chat--wrapper {
   padding-bottom: 20px;
+  position: relative;
 }
 
-
-form{
+form {
   position: sticky;
   bottom: 0;
   left: 0%;
@@ -80,13 +84,12 @@ form{
   z-index: 99;
   padding: 20px 0;
   padding-top: 0;
-  
 }
-.form-group{
+.form-group {
   position: relative;
   display: flex;
 }
-.form-control{
+.form-control {
   height: 60px;
   width: 100%;
   background-color: transparent;
@@ -95,16 +98,15 @@ form{
   border: 6px double var(--dark);
   font-size: 1em;
   outline: none;
-  box-shadow:none;
-  font-family: acuta,serif;
+  box-shadow: none;
+  font-family: acuta, serif;
   font-weight: 500;
   font-style: normal;
   color: var(--dark);
-  
 }
-.form-control::placeholder{
+.form-control::placeholder {
   color: var(--dark);
-  font-size:1em;
+  font-size: 1em;
   opacity: 1;
   font-weight: 500;
 }
@@ -119,17 +121,17 @@ form button {
   padding: 20px;
   color: var(--dark);
 }
-button svg{
+button svg {
   fill: var(--dark);
 }
 
-.chatbox-wrapper{
-  display:flex;
+.chatbox-wrapper {
+  display: flex;
   align-items: center;
   max-width: 800px;
-  width:max-content;
+  width: max-content;
 }
-.chatbox-wrapper h2{
+.chatbox-wrapper h2 {
   border: 2px solid var(--dark);
   border-radius: var(--br);
   padding: 20px 30px;
@@ -140,16 +142,14 @@ button svg{
   margin: 20px;
 }
 
-.chatbox-wrapper.active h2{
+.chatbox-wrapper.active h2 {
   background-color: var(--yellow);
-  
-  
-} 
-.chatbox-wrapper.active{
+}
+.chatbox-wrapper.active {
   flex-direction: row-reverse;
   margin-left: auto;
 }
-.chatbox-wrapper time{
+.chatbox-wrapper time {
   margin: 0 10px;
   font-size: 14px;
   opacity: 0.8;
@@ -160,52 +160,50 @@ button svg{
   z-index: 99;
   top: 10px;
   right: 5%;
-  
 }
 .personalized .MuiButton-text {
   padding: 10px;
   min-width: auto;
 }
-.personalized .MuiButton-text svg{
+.personalized .MuiButton-text svg {
   height: 24px;
   width: auto;
   overflow: visible;
 }
 
-.personalized .MuiButton-text:hover svg{
+.personalized .MuiButton-text:hover svg {
   transform: rotate(45deg);
-  transition: .3s ease;
-  
+  transition: 0.3s ease;
 }
 
-.close{
+.close {
   text-align: right;
   margin-top: -6px;
 }
-.close svg{
+.close svg {
   height: 28px;
   width: auto;
   cursor: pointer;
 }
-.MuiPopover-root .MuiPopover-paper{
+.MuiPopover-root .MuiPopover-paper {
   width: 400px;
   background-color: var(--primary);
-  color:var(--dark) ;
+  color: var(--dark);
   border-radius: var(--br);
   padding: 14px;
-  box-shadow:-4px 5px var(--dark) ;
-  border:2px solid var(--dark);
+  box-shadow: -4px 5px var(--dark);
+  border: 2px solid var(--dark);
   left: auto !important;
   right: 28px !important;
   max-width: 90%;
 }
-.MuiPopover-paper .MuiFormControlLabel-labelPlacementStart{
+.MuiPopover-paper .MuiFormControlLabel-labelPlacementStart {
   width: 100%;
   margin: 0;
   display: flex;
   justify-content: space-between;
 }
-.MuiPopover-paper .MuiSwitch-colorPrimary.Mui-checked{
+.MuiPopover-paper .MuiSwitch-colorPrimary.Mui-checked {
   color: var(--yellow);
 }
 .MuiPopover-paper .MuiFormGroup-root {
@@ -213,68 +211,66 @@ button svg{
   align-items: center;
   width: 100%;
   justify-content: space-between;
-  
 }
 
-.MuiPopover-paper .MuiFormControlLabel-root{
+.MuiPopover-paper .MuiFormControlLabel-root {
   margin: 0;
-  color: var(--dark)
+  color: var(--dark);
 }
 
-.MuiPopover-paper .MuiRadio-colorSecondary.Mui-checked, .MuiPopover-paper .MuiRadio-colorSecondary.Mui-checked + span{
-  color:#f2f2f2;
+.MuiPopover-paper .MuiRadio-colorSecondary.Mui-checked,
+.MuiPopover-paper .MuiRadio-colorSecondary.Mui-checked + span {
+  color: #f2f2f2;
 }
 
-
-.MuiPopover-paper .MuiTypography-body1, .MuiPopover-paper .MuiFormLabel-root{
-  font-family: acuta,serif;
+.MuiPopover-paper .MuiTypography-body1,
+.MuiPopover-paper .MuiFormLabel-root {
+  font-family: acuta, serif;
 }
 
 .MuiPopover-paper {
-  
 }
 
-@media screen and (max-width:840px){
-  .chatbox-wrapper{
+@media screen and (max-width: 840px) {
+  .chatbox-wrapper {
     max-width: 100%;
   }
-  .chatbox-wrapper time{
+  .chatbox-wrapper time {
     margin: 0;
   }
 }
 
-@media screen and (max-width:600px){
-  body{
-    font-size:14px;
+@media screen and (max-width: 600px) {
+  body {
+    font-size: 14px;
   }
-  .form-control{
+  .form-control {
     height: 46px;
     border-width: 5px;
     padding: 0 14px;
   }
-  .section__rule{
+  .section__rule {
     width: 95%;
   }
-  .chatbox-wrapper h2{
+  .chatbox-wrapper h2 {
     padding: 13px 24px;
   }
-  button svg{
+  button svg {
     height: 28px;
     width: auto;
-    
   }
   .chatbox-wrapper h2 {
     margin: 10px;
   }
-  .MuiPopover-root .MuiPopover-paper{
+  .MuiPopover-root .MuiPopover-paper {
     right: 3px !important;
   }
-  .MuiFormLabel-root.MuiFormControlLabel-root{
+  .MuiFormLabel-root.MuiFormControlLabel-root {
     width: 100%;
   }
 }
-@media screen and (min-width:600px){
-  body{
+@media screen and (min-width: 600px) {
+  body {
     overflow-y: scroll !important;
   }
 }
