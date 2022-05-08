@@ -218,9 +218,9 @@ button svg {
   color: var(--dark);
 }
 
-.MuiPopover-paper .MuiRadio-colorSecondary.Mui-checked,
-.MuiPopover-paper .MuiRadio-colorSecondary.Mui-checked + span {
-  color: #f2f2f2;
+.Mui-checked,
+.Mui-checked + span {
+  color: #f2f2f2 !important;
 }
 
 .MuiPopover-paper .MuiTypography-body1,
@@ -228,7 +228,8 @@ button svg {
   font-family: acuta, serif;
 }
 
-.MuiPopover-paper {
+.tooltip .MuiTooltip-popper * {
+  background-color: var(--dark) !important;
 }
 
 @media screen and (max-width: 840px) {

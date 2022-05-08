@@ -5,85 +5,119 @@ import Personalized from "./Components/Personalized";
 
 import db from "./Components/Firebase/Firebase";
 import firebase from "firebase";
-import FlipMove from "react-flip-move";
+// import FlipMove from "react-flip-move";
 
-import Welcome from "./Components/Welcome";
+// import Welcome from "./Components/Welcome";
 
 function App() {
-  const [input, setInput] = useState("");
-  const [name, setName] = useState("");
-  const [nameDevice, setNameDevice] = useState("");
-
-  const [location, setLocation] = useState([]);
-
   const [message, setMessage] = useState([]);
-  const [totalMessage, setTotalMessage] = useState();
+
+  const [data, setData] = useState({
+    text: "",
+    username: "",
+    nameDevice: "",
+    fullLocation: {
+      ip: "",
+      city: "",
+      country_name: "",
+      latitude: "",
+      longitude: "",
+    },
+    reply: "",
+    imageurl: "",
+  });
+
+  const { text, username, nameDevice, fullLocation, reply, imageurl } = data;
+
+  // const [totalMessage, setTotalMessage] = useState();
 
   const [theme, setTheme] = useState("purple");
+  const handleChange = (name, value) => {
+    setData({ ...data, [name]: value });
+  };
 
   const getUserGeoLocation = () => {
-    fetch(
-      "https://geolocation-db.com/json/1a811210-241d-11eb-b7a9-293dae7a95e1"
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setName(data.IPv4);
-        setLocation(data);
+    const request = new XMLHttpRequest();
+
+    request.open(
+      "GET",
+      "https://api.ipdata.co/?api-key=d3020161f66bc18d54299f1f323a378efac4f60876f0ebd4ae37df67"
+    );
+
+    request.setRequestHeader("Accept", "application/json");
+
+    request.onreadystatechange = function () {
+      if (this.readyState === 4) {
+        // console.log(this.responseText);
+        const data = this.responseText;
+        setData("name", data?.ip);
+        setData("fullLocation", {
+          ip: data?.ip,
+          city: data?.city,
+          country_name: data?.country_name,
+          latitude: data?.latitude,
+          longitude: data?.longitude,
+        });
         if (localStorage.getItem("name")) {
-          setNameDevice(localStorage.getItem("name"));
+          setData("nameDevice", localStorage.getItem("name"));
           // console.log('get')
         } else {
-          localStorage.setItem("name", `${data.IPv4}`);
+          localStorage.setItem("name", `${data?.ip}`);
           // console.log('I am setting')
         }
-      });
+      }
+    };
+
+    request.send();
   };
 
   useEffect(() => {
+    getUserGeoLocation();
+
     db.collection("chat12")
       .orderBy("timestamp", "asc")
       .onSnapshot((snapshot) => {
         setMessage(
           snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }))
         );
-        setTotalMessage(snapshot.docs.length);
+        // setTotalMessage(snapshot.docs.length);
       });
-    db.collection("chat12")
-      .get()
-      .then(function (querySnapshot) {
-        console.log(querySnapshot);
-      });
-  }, []);
+    // db.collection("chat12")
+    //   .get()
+    //   .then(function (querySnapshot) {
+    //     console.log(querySnapshot);
+    //   });
+  });
 
   useEffect(() => {
-    getUserGeoLocation();
     if (localStorage.getItem("theme")) {
       setTheme(localStorage.getItem("theme"));
       document.querySelector("body").removeAttribute("class");
       document.querySelector("body").classList.add(theme);
-      console.log(theme);
     } else {
       localStorage.setItem("theme", `${theme}`);
     }
   }, [theme]);
 
   const messagesEndRef = useRef(null);
-  const scrollToBottom = () => {
-    messagesEndRef.current.scrollIntoView({ behavior: "auto" });
-  };
+  // const scrollToBottom = () => {
+  //   messagesEndRef.current.scrollIntoView({ behavior: "auto" });
+  // };
 
-  useEffect(scrollToBottom, [message]);
+  // useEffect(scrollToBottom, [message]);
 
   const send = (e) => {
     e.preventDefault();
     db.collection("chat12").add({
-      username: name,
-      text: input,
+      username: username,
+      text: text,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      fullLocation: location,
+      fullLocation: fullLocation,
       nameDevice: nameDevice,
+      reply: reply,
+      imageurl: imageurl,
     });
-    setInput("");
+    handleChange("name", "");
   };
 
   return (
@@ -93,20 +127,11 @@ function App() {
           <Personalized theme={(theme) => setTheme(theme)} askTheme={theme} />
 
           <div className="chat--wrapper">
-            <FlipMove>
-              {message.map(({ id, data }, index) => (
-                <Messages
-                  key={id}
-                  username={data.username}
-                  text={data.text}
-                  timestamp={data.timestamp}
-                  name={name}
-                  totalMessage={totalMessage}
-                  nameDevice={data.nameDevice}
-                  index={index}
-                />
-              ))}
-            </FlipMove>
+            {/* <FlipMove> */}
+            {message.map(({ id, data }) => (
+              <Messages key={id} {...data} />
+            ))}
+            {/* </FlipMove> */}
 
             <div ref={messagesEndRef} />
           </div>
@@ -116,13 +141,13 @@ function App() {
               <input
                 className="form-control"
                 placeholder="write your message"
-                value={input}
-                onChange={(event) => setInput(event.target.value)}
+                value={""}
+                // onChange={(event) => handleChange("text", event.target.value)}
                 required
                 autoFocus
-                autoComplete={input.toString()}
+                // autoComplete={text.toString()}
               />
-              <button onClick={send} type="submit" disabled={!input}>
+              <button onClick={send} type="submit" disabled={!text}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="48.251"
@@ -143,7 +168,7 @@ function App() {
         </section>
       </div>
 
-      <Welcome />
+      {/* <Welcome /> */}
     </div>
   );
 }
