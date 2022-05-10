@@ -4,10 +4,12 @@ import Messages from "./Components/Messages";
 import Personalized from "./Components/Personalized";
 
 import db from "./Components/Firebase/Firebase";
-import firebase from "firebase";
+// import firebase from "firebase";
 // import FlipMove from "react-flip-move";
 
 // import Welcome from "./Components/Welcome";
+import firebase from "firebase/app";
+import "firebase/firestore";
 
 function App() {
   const [message, setMessage] = useState([]);
@@ -25,17 +27,19 @@ function App() {
     },
     reply: "",
     imageurl: "",
+    timestamp: "",
   });
 
-  const { text, username, nameDevice, fullLocation, reply, imageurl } = data;
+  const { text } = data;
 
   // const [totalMessage, setTotalMessage] = useState();
 
   const [theme, setTheme] = useState("purple");
   const handleChange = (name, value) => {
-    setData({ ...data, [name]: value });
+    setData((data) => ({ ...data, [name]: value }));
   };
 
+  // user location
   const getUserGeoLocation = () => {
     const request = new XMLHttpRequest();
 
@@ -48,10 +52,10 @@ function App() {
 
     request.onreadystatechange = function () {
       if (this.readyState === 4) {
-        // console.log(this.responseText);
-        const data = this.responseText;
-        setData("name", data?.ip);
-        setData("fullLocation", {
+        const data = JSON.parse(this.responseText);
+        handleChange("nameDevice", data?.ip);
+        handleChange("username", data?.ip);
+        handleChange("fullLocation", {
           ip: data?.ip,
           city: data?.city,
           country_name: data?.country_name,
@@ -59,11 +63,11 @@ function App() {
           longitude: data?.longitude,
         });
         if (localStorage.getItem("name")) {
-          setData("nameDevice", localStorage.getItem("name"));
-          // console.log('get')
-        } else {
+          handleChange("nameDevice", localStorage.getItem("name"));
+        } else if (data?.ip) {
           localStorage.setItem("name", `${data?.ip}`);
-          // console.log('I am setting')
+        } else {
+          localStorage.setItem("name", "unknown");
         }
       }
     };
@@ -71,24 +75,20 @@ function App() {
     request.send();
   };
 
+  // state data
   useEffect(() => {
     getUserGeoLocation();
-
     db.collection("chat12")
       .orderBy("timestamp", "asc")
       .onSnapshot((snapshot) => {
         setMessage(
           snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }))
         );
-        // setTotalMessage(snapshot.docs.length);
       });
-    // db.collection("chat12")
-    //   .get()
-    //   .then(function (querySnapshot) {
-    //     console.log(querySnapshot);
-    //   });
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  // for theme change
   useEffect(() => {
     if (localStorage.getItem("theme")) {
       setTheme(localStorage.getItem("theme"));
@@ -100,24 +100,22 @@ function App() {
   }, [theme]);
 
   const messagesEndRef = useRef(null);
-  // const scrollToBottom = () => {
-  //   messagesEndRef.current.scrollIntoView({ behavior: "auto" });
-  // };
 
-  // useEffect(scrollToBottom, [message]);
+  const scrollToBottom = () => {
+    messagesEndRef.current.scrollIntoView({ behavior: "auto" });
+  };
+
+  useEffect(scrollToBottom, [message]);
 
   const send = (e) => {
     e.preventDefault();
+    console.log("data before send", data);
     db.collection("chat12").add({
-      username: username,
-      text: text,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      fullLocation: fullLocation,
-      nameDevice: nameDevice,
-      reply: reply,
-      imageurl: imageurl,
+      ...data,
+      timestamp: firebase.firestore.Timestamp.now(),
     });
-    handleChange("name", "");
+
+    handleChange("text", "");
   };
 
   return (
@@ -141,8 +139,8 @@ function App() {
               <input
                 className="form-control"
                 placeholder="write your message"
-                value={""}
-                // onChange={(event) => handleChange("text", event.target.value)}
+                value={text}
+                onChange={(event) => handleChange("text", event.target.value)}
                 required
                 autoFocus
                 // autoComplete={text.toString()}
