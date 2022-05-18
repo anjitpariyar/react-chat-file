@@ -31,6 +31,7 @@ function App() {
   });
 
   const { text } = data;
+  // const [totalMessage, setTotalMessage] = useState();
 
   // const [totalMessage, setTotalMessage] = useState();
 
@@ -125,16 +126,16 @@ function App() {
           <Personalized theme={(theme) => setTheme(theme)} askTheme={theme} />
 
           <div className="chat--wrapper">
-            {/* <FlipMove> */}
-            {message.map(({ id, data }) => (
-              <Messages key={id} {...data} />
-            ))}
-            {/* </FlipMove> */}
+            {message.length > 0 ? (
+              message.map(({ id, data }) => <Messages key={id} {...data} />)
+            ) : (
+              <div>loading..</div>
+            )}
 
             <div ref={messagesEndRef} />
           </div>
 
-          <form method="" action="#!">
+          <form method="" action="#!" onSubmit={send}>
             <div className="form-group">
               <input
                 className="form-control"
@@ -145,7 +146,7 @@ function App() {
                 autoFocus
                 // autoComplete={text.toString()}
               />
-              <button onClick={send} type="submit" disabled={!text}>
+              <button type="submit" disabled={!text}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="48.251"

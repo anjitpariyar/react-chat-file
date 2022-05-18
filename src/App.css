@@ -73,6 +73,7 @@ body.dark .chatbox-wrapper h2 {
 .chat--wrapper {
   padding-bottom: 20px;
   position: relative;
+  min-height: calc(100vh - 120px);
 }
 
 form {
