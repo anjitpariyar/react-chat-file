@@ -4,6 +4,8 @@ import Messages from "./Components/Messages";
 import Personalized from "./Components/Personalized";
 
 import db from "./Components/Firebase/Firebase";
+import Skeleton from "@mui/material/Skeleton";
+
 // import firebase from "firebase";
 // import FlipMove from "react-flip-move";
 
@@ -34,6 +36,7 @@ function App() {
   // const [totalMessage, setTotalMessage] = useState();
 
   // const [totalMessage, setTotalMessage] = useState();
+  const [pageSize, setPageSize] = useState(20);
 
   const [theme, setTheme] = useState("purple");
   const handleChange = (name, value) => {
@@ -81,6 +84,7 @@ function App() {
     getUserGeoLocation();
     db.collection("chat12")
       .orderBy("timestamp", "asc")
+      .limitToLast(pageSize)
       .onSnapshot((snapshot) => {
         setMessage(
           snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }))
@@ -101,6 +105,7 @@ function App() {
   }, [theme]);
 
   const messagesEndRef = useRef(null);
+  const loaderRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current.scrollIntoView({ behavior: "auto" });
@@ -124,8 +129,18 @@ function App() {
       <div className="top--part">
         <section className="section__rule">
           <Personalized theme={(theme) => setTheme(theme)} askTheme={theme} />
-
           <div className="chat--wrapper">
+            <Skeleton
+              variant="text"
+              height={130}
+              width={"30%"}
+              style={{
+                minWidth: "200px",
+                borderRadius: "var(--br)",
+                boxShadow: "-6px 9px var(--dark)",
+              }}
+              ref={loaderRef}
+            />
             {message.length > 0 ? (
               message.map(({ id, data }) => <Messages key={id} {...data} />)
             ) : (
@@ -146,6 +161,7 @@ function App() {
                 autoFocus
                 // autoComplete={text.toString()}
               />
+
               <button type="submit" disabled={!text}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
