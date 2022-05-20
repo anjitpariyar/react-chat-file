@@ -14,6 +14,7 @@
     "firebase": "^7.23.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-intersection-observer": "^9.1.0",
     "react-scripts": "3.4.3"
   },
   "scripts": {

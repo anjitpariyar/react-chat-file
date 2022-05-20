@@ -5,6 +5,7 @@ import Personalized from "./Components/Personalized";
 
 import db from "./Components/Firebase/Firebase";
 import Skeleton from "@mui/material/Skeleton";
+import { useInView } from "react-intersection-observer";
 
 // import firebase from "firebase";
 // import FlipMove from "react-flip-move";
@@ -15,6 +16,7 @@ import "firebase/firestore";
 
 function App() {
   const [message, setMessage] = useState([]);
+  const [totalMessage, setTotalMessage] = useState();
 
   const [data, setData] = useState({
     text: "",
@@ -33,9 +35,8 @@ function App() {
   });
 
   const { text } = data;
-  // const [totalMessage, setTotalMessage] = useState();
+  const chatRef = useRef(null);
 
-  // const [totalMessage, setTotalMessage] = useState();
   const [pageSize, setPageSize] = useState(20);
 
   const [theme, setTheme] = useState("purple");
@@ -45,43 +46,40 @@ function App() {
 
   // user location
   const getUserGeoLocation = () => {
-    const request = new XMLHttpRequest();
-
-    request.open(
-      "GET",
-      "https://api.ipdata.co/?api-key=d3020161f66bc18d54299f1f323a378efac4f60876f0ebd4ae37df67"
-    );
-
-    request.setRequestHeader("Accept", "application/json");
-
-    request.onreadystatechange = function () {
-      if (this.readyState === 4) {
-        const data = JSON.parse(this.responseText);
-        handleChange("nameDevice", data?.ip);
-        handleChange("username", data?.ip);
+    fetch("http://ip-api.com/json/")
+      .then((response) => response.json())
+      .then((data) => {
+        // setting data
+        // const data = JSON.parse(this.responseText);
+        handleChange("nameDevice", data?.query);
+        handleChange("username", data?.query);
         handleChange("fullLocation", {
-          ip: data?.ip,
+          ip: data?.query,
           city: data?.city,
-          country_name: data?.country_name,
-          latitude: data?.latitude,
-          longitude: data?.longitude,
+          country_name: data?.country,
+          latitude: data?.lat,
+          longitude: data?.lon,
         });
         if (localStorage.getItem("name")) {
           handleChange("nameDevice", localStorage.getItem("name"));
-        } else if (data?.ip) {
-          localStorage.setItem("name", `${data?.ip}`);
+        } else if (data?.query) {
+          localStorage.setItem("name", `${data?.query}`);
         } else {
           localStorage.setItem("name", "unknown");
         }
-      }
-    };
-
-    request.send();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
+  // add location
+  useEffect(() => {
+    getUserGeoLocation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // state data
   useEffect(() => {
-    getUserGeoLocation();
     db.collection("chat12")
       .orderBy("timestamp", "asc")
       .limitToLast(pageSize)
@@ -90,8 +88,13 @@ function App() {
           snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }))
         );
       });
+    db.collection("chat12")
+      .get()
+      .then((snap) => {
+        setTotalMessage(snap.size);
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [pageSize]);
 
   // for theme change
   useEffect(() => {
@@ -105,14 +108,27 @@ function App() {
   }, [theme]);
 
   const messagesEndRef = useRef(null);
-  const loaderRef = useRef(null);
-
   const scrollToBottom = () => {
     messagesEndRef.current.scrollIntoView({ behavior: "auto" });
   };
 
-  useEffect(scrollToBottom, [message]);
+  // down to bottom whenever data changed
+  // useEffect(scrollToBottom, [message]);
 
+  // detect the view of loader
+  const { ref, inView } = useInView({
+    /* Optional options */
+    threshold: 1,
+  });
+
+  useEffect(() => {
+    if (inView) {
+      setPageSize((pageSize) => pageSize + 100);
+      console.log("pageSize", pageSize);
+    }
+  }, [inView]);
+
+  // submit me
   const send = (e) => {
     e.preventDefault();
     console.log("data before send", data);
@@ -120,7 +136,6 @@ function App() {
       ...data,
       timestamp: firebase.firestore.Timestamp.now(),
     });
-
     handleChange("text", "");
   };
 
@@ -130,21 +145,63 @@ function App() {
         <section className="section__rule">
           <Personalized theme={(theme) => setTheme(theme)} askTheme={theme} />
           <div className="chat--wrapper">
-            <Skeleton
-              variant="text"
-              height={130}
-              width={"30%"}
-              style={{
-                minWidth: "200px",
-                borderRadius: "var(--br)",
-                boxShadow: "-6px 9px var(--dark)",
-              }}
-              ref={loaderRef}
-            />
             {message.length > 0 ? (
-              message.map(({ id, data }) => <Messages key={id} {...data} />)
+              <>
+                {totalMessage > pageSize && (
+                  <Skeleton
+                    variant="text"
+                    height={130}
+                    width={"30%"}
+                    style={{
+                      minWidth: "200px",
+                      borderRadius: "var(--br)",
+                      boxShadow: "-6px 9px var(--dark)",
+                    }}
+                    ref={ref}
+                  />
+                )}
+                <div ref={chatRef}>
+                  {message.map(({ id, data }) => (
+                    <Messages key={id} {...data} />
+                  ))}
+                </div>
+              </>
             ) : (
-              <div>loading..</div>
+              <div>
+                <Skeleton
+                  variant="text"
+                  height={130}
+                  width={"30%"}
+                  style={{
+                    minWidth: "200px",
+                    borderRadius: "var(--br)",
+                    boxShadow: "-6px 9px var(--dark)",
+                  }}
+                />
+                <br />
+                <Skeleton
+                  variant="text"
+                  height={130}
+                  width={"20%"}
+                  style={{
+                    minWidth: "150px",
+                    borderRadius: "var(--br)",
+                    boxShadow: "-6px 9px var(--dark)",
+                  }}
+                />
+                <br />
+                <Skeleton
+                  variant="text"
+                  height={130}
+                  width={"30%"}
+                  style={{
+                    minWidth: "200px",
+                    borderRadius: "var(--br)",
+                    boxShadow: "-6px 9px var(--dark)",
+                  }}
+                />
+                <br />
+              </div>
             )}
 
             <div ref={messagesEndRef} />
