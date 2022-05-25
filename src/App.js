@@ -1,12 +1,9 @@
 import "./App.css";
-import React, { useState, useEffect, useRef } from "react";
-import Messages from "./Components/Messages";
+import React, { useState, useEffect } from "react";
 import Personalized from "./Components/Personalized";
 
 import db from "./Components/Firebase/Firebase";
-import Skeleton from "@mui/material/Skeleton";
-import { useInView } from "react-intersection-observer";
-
+import MessageWrapper from "./Components/MessageWrapper";
 // import firebase from "firebase";
 // import FlipMove from "react-flip-move";
 
@@ -15,9 +12,6 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 
 function App() {
-  const [message, setMessage] = useState([]);
-  const [totalMessage, setTotalMessage] = useState();
-
   const [data, setData] = useState({
     text: "",
     username: "",
@@ -35,15 +29,10 @@ function App() {
   });
 
   const { text } = data;
-  const chatRef = useRef(null);
-
-  const [pageSize, setPageSize] = useState(20);
-
   const [theme, setTheme] = useState("purple");
   const handleChange = (name, value) => {
     setData((data) => ({ ...data, [name]: value }));
   };
-
   // user location
   const getUserGeoLocation = () => {
     fetch("http://ip-api.com/json/")
@@ -78,24 +67,6 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // state data
-  useEffect(() => {
-    db.collection("chat12")
-      .orderBy("timestamp", "asc")
-      .limitToLast(pageSize)
-      .onSnapshot((snapshot) => {
-        setMessage(
-          snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }))
-        );
-      });
-    db.collection("chat12")
-      .get()
-      .then((snap) => {
-        setTotalMessage(snap.size);
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageSize]);
-
   // for theme change
   useEffect(() => {
     if (localStorage.getItem("theme")) {
@@ -106,27 +77,6 @@ function App() {
       localStorage.setItem("theme", `${theme}`);
     }
   }, [theme]);
-
-  const messagesEndRef = useRef(null);
-  const scrollToBottom = () => {
-    messagesEndRef.current.scrollIntoView({ behavior: "auto" });
-  };
-
-  // down to bottom whenever data changed
-  // useEffect(scrollToBottom, [message]);
-
-  // detect the view of loader
-  const { ref, inView } = useInView({
-    /* Optional options */
-    threshold: 1,
-  });
-
-  useEffect(() => {
-    if (inView) {
-      setPageSize((pageSize) => pageSize + 100);
-      console.log("pageSize", pageSize);
-    }
-  }, [inView]);
 
   // submit me
   const send = (e) => {
@@ -144,69 +94,7 @@ function App() {
       <div className="top--part">
         <section className="section__rule">
           <Personalized theme={(theme) => setTheme(theme)} askTheme={theme} />
-          <div className="chat--wrapper">
-            {message.length > 0 ? (
-              <>
-                {totalMessage > pageSize && (
-                  <Skeleton
-                    variant="text"
-                    height={130}
-                    width={"30%"}
-                    style={{
-                      minWidth: "200px",
-                      borderRadius: "var(--br)",
-                      boxShadow: "-6px 9px var(--dark)",
-                    }}
-                    ref={ref}
-                  />
-                )}
-                <div ref={chatRef}>
-                  {message.map(({ id, data }) => (
-                    <Messages key={id} {...data} />
-                  ))}
-                </div>
-              </>
-            ) : (
-              <div>
-                <Skeleton
-                  variant="text"
-                  height={130}
-                  width={"30%"}
-                  style={{
-                    minWidth: "200px",
-                    borderRadius: "var(--br)",
-                    boxShadow: "-6px 9px var(--dark)",
-                  }}
-                />
-                <br />
-                <Skeleton
-                  variant="text"
-                  height={130}
-                  width={"20%"}
-                  style={{
-                    minWidth: "150px",
-                    borderRadius: "var(--br)",
-                    boxShadow: "-6px 9px var(--dark)",
-                  }}
-                />
-                <br />
-                <Skeleton
-                  variant="text"
-                  height={130}
-                  width={"30%"}
-                  style={{
-                    minWidth: "200px",
-                    borderRadius: "var(--br)",
-                    boxShadow: "-6px 9px var(--dark)",
-                  }}
-                />
-                <br />
-              </div>
-            )}
-
-            <div ref={messagesEndRef} />
-          </div>
-
+          <MessageWrapper />
           <form method="" action="#!" onSubmit={send}>
             <div className="form-group">
               <input
