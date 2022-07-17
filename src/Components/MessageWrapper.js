@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 
-import Messages from "./Messages";
+// import Messages from "./Messages";
 import Skeleton from "@mui/material/Skeleton";
 
 import db from "./Firebase/Firebase";
 import { useInView } from "react-intersection-observer";
-import "firebase/firestore";
+import "firebase/compat/firestore";
 
 const MessageWrapper = () => {
   //for first 20 message at the start
@@ -15,52 +15,73 @@ const MessageWrapper = () => {
   const [messageAdded, setAddedMessage] = useState([]);
 
   // combining message and messageAdded
-  const [totalMessage, setTotalMessage] = useState([]);
+  const totalMessage = useMemo(() => [...messageAdded], [messageAdded]);
 
+  // to know how many total message in the data base
   const [countMessage, setCountMessage] = useState([]);
 
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize, setPageSize] = useState(0);
+
+  // firebase Ref
 
   // state data for starting 20 data
   useEffect(() => {
+    console.log("anyone call me , i am a starter?");
     db.collection("chat12")
       .orderBy("timestamp", "asc")
       .limitToLast(20)
       .onSnapshot((snapshot) => {
-        setMessage(
+        setAddedMessage(
           snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }))
         );
       });
+
+    // total message in the data base
     db.collection("chat12")
       .get()
       .then((snap) => {
         setCountMessage(snap.size);
+        console.log("snap size ", snap.size);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // added data when scrolling is update
   useEffect(() => {
-    if (pageSize > 20) {
+    console.log("pageSize", pageSize);
+    if (pageSize > 0) {
+      // db.collection("chat12")
+      //   .orderBy("timestamp", "asc")
+      //   .limitToLast(pageSize * 20 + 20)
+      //   .onSnapshot((snapshot) => {
+      //     let tempMessage = [
+      //       snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() })),
+      //     ];
+      //     tempMessage = tempMessage.flat();
+      //     setAddedMessage([...new Set([...tempMessage])]);
+      //   });
       db.collection("chat12")
         .orderBy("timestamp", "asc")
-        .startAt(0)
-        .endAt(30)
-        .onSnapshot((snapshot) => {
-          setAddedMessage([
-            ...messageAdded,
-            ...snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() })),
-          ]);
+        .limitToLast(pageSize * 20 + 20)
+        .get()
+        .then((doc) => {
+          console.log(doc);
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageSize]);
 
-  // lets combine two different state chat
+  // scroll into view
   useEffect(() => {
-    // , ...messageAdded
-    setTotalMessage([...new Set([...message])]);
-  }, [message, messageAdded]);
+    // if pagesige is 0 then its a first page
+    console.log("pageSize for message added", pageSize);
+    if (pageSize === 0) {
+      scrollToBottom();
+    } else {
+      // scrollToTop();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messageAdded]);
 
   const chatRef = useRef(null);
 
@@ -68,11 +89,16 @@ const MessageWrapper = () => {
     messagesEndRef.current.scrollIntoView({ behavior: "auto" });
   };
 
+  // const scrollToTop = () => {
+  //   if (chatRef?.current?.children[21])
+  //     chatRef.current.children[21].scrollIntoView({ behavior: "auto" });
+  // };
+
   const messagesEndRef = useRef(null);
 
   // down to bottom whenever data changed only on message change
-  useEffect(scrollToBottom, [message]);
-  useEffect(() => console.log("messageAdded", messageAdded), [messageAdded]);
+  // useEffect(scrollToBottom, [message]);
+  // useEffect(() => console.log("messageAdded", messageAdded), [messageAdded]);
 
   // detect the view of loader
   const { ref, inView } = useInView({
@@ -82,7 +108,7 @@ const MessageWrapper = () => {
 
   useEffect(() => {
     if (inView) {
-      setPageSize((pageSize) => pageSize + 10);
+      setPageSize((pageSize) => pageSize + 1);
     }
     // chatRef.current.childNodes[9].scrollIntoView({
     //   behavior: "smooth",
@@ -93,7 +119,7 @@ const MessageWrapper = () => {
 
   return (
     <div className="chat--wrapper">
-      {message.length > 0 ? (
+      {totalMessage.length > 0 ? (
         <>
           {countMessage > pageSize && (
             <Skeleton
@@ -109,9 +135,9 @@ const MessageWrapper = () => {
             />
           )}
           <div ref={chatRef}>
-            {totalMessage.map(({ id, data }) => (
+            {/* {totalMessage.map(({ id, data }) => (
               <Messages key={id} {...data} />
-            ))}
+            ))} */}
           </div>
         </>
       ) : (

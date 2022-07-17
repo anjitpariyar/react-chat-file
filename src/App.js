@@ -4,11 +4,7 @@ import Personalized from "./Components/Personalized";
 
 import db from "./Components/Firebase/Firebase";
 import MessageWrapper from "./Components/MessageWrapper";
-// import firebase from "firebase";
-// import FlipMove from "react-flip-move";
-
-// import Welcome from "./Components/Welcome";
-import firebase from "firebase/app";
+import firebase from "firebase/compat/app";
 import "firebase/firestore";
 
 function App() {
@@ -38,24 +34,23 @@ function App() {
     fetch("http://ip-api.com/json/")
       .then((response) => response.json())
       .then((data) => {
-        // setting data
-        // const data = JSON.parse(this.responseText);
-        handleChange("nameDevice", data?.query);
-        handleChange("username", data?.query);
-        handleChange("fullLocation", {
-          ip: data?.query,
-          city: data?.city,
-          country_name: data?.country,
-          latitude: data?.lat,
-          longitude: data?.lon,
-        });
-        if (localStorage.getItem("name")) {
-          handleChange("nameDevice", localStorage.getItem("name"));
-        } else if (data?.query) {
-          localStorage.setItem("name", `${data?.query}`);
-        } else {
-          localStorage.setItem("name", "unknown");
-        }
+        console.log(data?.query);
+        // handleChange("nameDevice", data?.query);
+        // handleChange("username", data?.query);
+        // handleChange("fullLocation", {
+        //   ip: data?.query,
+        //   city: data?.city,
+        //   country_name: data?.country,
+        //   latitude: data?.lat,
+        //   longitude: data?.lon,
+        // });
+        // if (localStorage.getItem("name")) {
+        //   handleChange("nameDevice", localStorage.getItem("name"));
+        // } else if (data?.query) {
+        //   localStorage.setItem("name", `${data?.query}`);
+        // } else {
+        //   localStorage.setItem("name", "unknown");
+        // }
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -94,7 +89,7 @@ function App() {
       <div className="top--part">
         <section className="section__rule">
           <Personalized theme={(theme) => setTheme(theme)} askTheme={theme} />
-          <MessageWrapper />
+          {/* <MessageWrapper /> */}
           <form method="" action="#!" onSubmit={send}>
             <div className="form-group">
               <input

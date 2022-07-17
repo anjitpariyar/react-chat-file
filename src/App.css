@@ -229,7 +229,7 @@ button svg {
   font-family: acuta, serif;
 }
 
-.tooltip .MuiTooltip-popper * {
+.MuiTooltip-popper > div {
   background-color: var(--dark) !important;
 }
 
