@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Tooltip from "@mui/material/Tooltip";
 
 const Messages = (props) => {
+  console.log(props);
   // console.log(props)
   const { name, username, text, timestamp, index, nameDevice } = props;
   const isUser =

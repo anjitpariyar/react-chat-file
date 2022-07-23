@@ -4,8 +4,9 @@ import Personalized from "./Components/Personalized";
 
 import db from "./Components/Firebase/Firebase";
 import MessageWrapper from "./Components/MessageWrapper";
-import firebase from "firebase/compat/app";
-import "firebase/firestore";
+// import firebase from "firebase/compat/app";
+
+import { collection, addDoc } from "firebase/firestore";
 
 function App() {
   const [data, setData] = useState({
@@ -34,23 +35,22 @@ function App() {
     fetch("http://ip-api.com/json/")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data?.query);
-        // handleChange("nameDevice", data?.query);
-        // handleChange("username", data?.query);
-        // handleChange("fullLocation", {
-        //   ip: data?.query,
-        //   city: data?.city,
-        //   country_name: data?.country,
-        //   latitude: data?.lat,
-        //   longitude: data?.lon,
-        // });
-        // if (localStorage.getItem("name")) {
-        //   handleChange("nameDevice", localStorage.getItem("name"));
-        // } else if (data?.query) {
-        //   localStorage.setItem("name", `${data?.query}`);
-        // } else {
-        //   localStorage.setItem("name", "unknown");
-        // }
+        handleChange("nameDevice", data?.query || "NA");
+        handleChange("username", data?.query);
+        handleChange("fullLocation", {
+          ip: data?.query,
+          city: data?.city,
+          country_name: data?.country,
+          latitude: data?.lat,
+          longitude: data?.lon,
+        });
+        if (localStorage.getItem("name")) {
+          handleChange("nameDevice", localStorage.getItem("name"));
+        } else if (data?.query) {
+          localStorage.setItem("name", `${data?.query}`);
+        } else {
+          localStorage.setItem("name", "unknown");
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -74,13 +74,23 @@ function App() {
   }, [theme]);
 
   // submit me
-  const send = (e) => {
+  const send = async (e) => {
     e.preventDefault();
-    console.log("data before send", data);
-    db.collection("chat12").add({
-      ...data,
-      timestamp: firebase.firestore.Timestamp.now(),
-    });
+    // console.log("data before send", data);
+    // db.collection("chat12").add({
+    //   ...data,
+    //   timestamp: firebase.firestore.Timestamp.now(),
+    // });
+    try {
+      await addDoc(collection(db, "chat12"), {
+        first: "Ada",
+        last: "Lovelace",
+        born: 1815,
+      });
+      // console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
     handleChange("text", "");
   };
 
@@ -89,7 +99,7 @@ function App() {
       <div className="top--part">
         <section className="section__rule">
           <Personalized theme={(theme) => setTheme(theme)} askTheme={theme} />
-          {/* <MessageWrapper /> */}
+          <MessageWrapper />
           <form method="" action="#!" onSubmit={send}>
             <div className="form-group">
               <input

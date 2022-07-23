@@ -1,11 +1,22 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 
-// import Messages from "./Messages";
+import Messages from "./Messages";
 import Skeleton from "@mui/material/Skeleton";
 
 import db from "./Firebase/Firebase";
 import { useInView } from "react-intersection-observer";
-import "firebase/compat/firestore";
+
+import {
+  collection,
+  query,
+  orderBy,
+  startAfter,
+  limit,
+  getDocs,
+  limitToLast,
+  onSnapshot,
+  doc,
+} from "firebase/firestore";
 
 const MessageWrapper = () => {
   //for first 20 message at the start
@@ -23,26 +34,35 @@ const MessageWrapper = () => {
   const [pageSize, setPageSize] = useState(0);
 
   // firebase Ref
+  const dataRef = collection(db, "chat12");
 
   // state data for starting 20 data
   useEffect(() => {
-    console.log("anyone call me , i am a starter?");
-    db.collection("chat12")
-      .orderBy("timestamp", "asc")
-      .limitToLast(20)
-      .onSnapshot((snapshot) => {
-        setAddedMessage(
-          snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }))
-        );
+    const firstQuery = query(
+      dataRef,
+      orderBy("timestamp", "asc"),
+      limitToLast(25)
+    );
+    const fetchData = async () => {
+      onSnapshot(firstQuery, (querySnapshot) => {
+        const cities = [];
+        querySnapshot.forEach((doc) => {
+          cities.push({ id: doc.id, data: doc.data() });
+        });
+        // console.log("cities", cities);
+        setAddedMessage(cities);
       });
+    };
+    fetchData();
+    // db.collection("chat12")
+    //   .orderBy("timestamp", "asc")
+    //   .limitToLast(20)
+    //   .onSnapshot((snapshot) => {
+    //     setAddedMessage(
+    //       snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }))
+    //     );
+    //   });
 
-    // total message in the data base
-    db.collection("chat12")
-      .get()
-      .then((snap) => {
-        setCountMessage(snap.size);
-        console.log("snap size ", snap.size);
-      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -75,6 +95,7 @@ const MessageWrapper = () => {
   useEffect(() => {
     // if pagesige is 0 then its a first page
     console.log("pageSize for message added", pageSize);
+    console.log("message added", messageAdded);
     if (pageSize === 0) {
       scrollToBottom();
     } else {
@@ -135,9 +156,9 @@ const MessageWrapper = () => {
             />
           )}
           <div ref={chatRef}>
-            {/* {totalMessage.map(({ id, data }) => (
+            {totalMessage.map(({ id, data }) => (
               <Messages key={id} {...data} />
-            ))} */}
+            ))}
           </div>
         </>
       ) : (

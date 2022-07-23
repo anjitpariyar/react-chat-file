@@ -1,6 +1,6 @@
 {
   "name": "chat-anonymously",
-  "version": "0.1.0",
+  "version": "2.0.1",
   "private": true,
   "author": "anjit pariyar",
   "dependencies": {
@@ -15,7 +15,7 @@
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-intersection-observer": "^9.1.0",
-    "react-scripts": "^2.1.3"
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
