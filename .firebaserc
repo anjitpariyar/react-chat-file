@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "chat-25704"
-  }
+    "default": "chat-25704",
+    "firebase use": "chat-25704"
+  },
+  "targets": {},
+  "etags": {}
 }

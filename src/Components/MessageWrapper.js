@@ -113,13 +113,13 @@ const MessageWrapper = () => {
   const chatRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current.scrollIntoView({ behavior: "auto" });
+    messagesEndRef?.current?.scrollIntoView({ behavior: "auto" });
   };
 
   const scrollToTop = () => {
     // console.log("scrollToTop", chatRef?.current?.children[19]);
     if (chatRef?.current?.children[19])
-      chatRef.current.children[19].scrollIntoView({
+      chatRef?.current?.children[19]?.scrollIntoView({
         behavior: "auto",
         block: "start",
       });
