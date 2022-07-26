@@ -6,7 +6,7 @@ import db from "./Components/Firebase/Firebase";
 import MessageWrapper from "./Components/MessageWrapper";
 // import firebase from "firebase/compat/app";
 
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 function App() {
   const [data, setData] = useState({
@@ -76,16 +76,10 @@ function App() {
   // submit me
   const send = async (e) => {
     e.preventDefault();
-    // console.log("data before send", data);
-    // db.collection("chat12").add({
-    //   ...data,
-    //   timestamp: firebase.firestore.Timestamp.now(),
-    // });
     try {
-      await addDoc(collection(db, "chat12"), {
-        first: "Ada",
-        last: "Lovelace",
-        born: 1815,
+      const docRef = await addDoc(collection(db, "chat12"), {
+        ...data,
+        timestamp: serverTimestamp(),
       });
       // console.log("Document written with ID: ", docRef.id);
     } catch (e) {

@@ -15,13 +15,14 @@ import {
   getDocs,
   limitToLast,
   onSnapshot,
+  getDoc,
   doc,
+  endBefore,
+  endAt,
+  startAt,
 } from "firebase/firestore";
 
 const MessageWrapper = () => {
-  //for first 20 message at the start
-  const [message, setMessage] = useState([]);
-
   // for scrolled up image
   const [messageAdded, setAddedMessage] = useState([]);
 
@@ -29,64 +30,76 @@ const MessageWrapper = () => {
   const totalMessage = useMemo(() => [...messageAdded], [messageAdded]);
 
   // to know how many total message in the data base
-  const [countMessage, setCountMessage] = useState([]);
+  const [countMessage, setCountMessage] = useState(0);
 
   const [pageSize, setPageSize] = useState(0);
 
   // firebase Ref
   const dataRef = collection(db, "chat12");
 
+  // last visible item
+  const [lastVisible, setLastVisible] = useState(null);
+
   // state data for starting 20 data
   useEffect(() => {
     const firstQuery = query(
       dataRef,
       orderBy("timestamp", "asc"),
-      limitToLast(25)
+      limitToLast(20)
     );
+
     const fetchData = async () => {
+      // for snapshot
       onSnapshot(firstQuery, (querySnapshot) => {
-        const cities = [];
+        const initData = [];
         querySnapshot.forEach((doc) => {
-          cities.push({ id: doc.id, data: doc.data() });
+          initData.push({ id: doc.id, data: doc.data() });
         });
-        // console.log("cities", cities);
-        setAddedMessage(cities);
+
+        // console.log("initData", initData);
+        setAddedMessage(initData);
+        scrollToBottom();
+
+        // setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
       });
+      const docSnap2 = await getDocs(firstQuery);
+
+      // to count the data
+      const docSnap = await getDocs(dataRef);
+      // to last visible item
+      setLastVisible(docSnap2.docs[0]);
+      setCountMessage(docSnap.size);
     };
+
     fetchData();
-    // db.collection("chat12")
-    //   .orderBy("timestamp", "asc")
-    //   .limitToLast(20)
-    //   .onSnapshot((snapshot) => {
-    //     setAddedMessage(
-    //       snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }))
-    //     );
-    //   });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // added data when scrolling is update
   useEffect(() => {
-    console.log("pageSize", pageSize);
     if (pageSize > 0) {
-      // db.collection("chat12")
-      //   .orderBy("timestamp", "asc")
-      //   .limitToLast(pageSize * 20 + 20)
-      //   .onSnapshot((snapshot) => {
-      //     let tempMessage = [
-      //       snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() })),
-      //     ];
-      //     tempMessage = tempMessage.flat();
-      //     setAddedMessage([...new Set([...tempMessage])]);
-      //   });
-      db.collection("chat12")
-        .orderBy("timestamp", "asc")
-        .limitToLast(pageSize * 20 + 20)
-        .get()
-        .then((doc) => {
-          console.log(doc);
+      console.log("pageSize", lastVisible.data().text);
+      const nextQuery = query(
+        dataRef,
+        orderBy("timestamp", "asc"),
+        endBefore(lastVisible),
+        limitToLast(20)
+      );
+
+      const fetchData = async () => {
+        const querySnapshot = await getDocs(nextQuery);
+        const addedData = [];
+        setLastVisible(querySnapshot.docs[0]);
+        querySnapshot.forEach((doc) => {
+          addedData.push({ id: doc.id, data: doc.data() });
         });
+        console.log("add", addedData);
+        setAddedMessage((messageAdded) => [
+          ...new Set([...addedData, ...messageAdded]),
+        ]);
+      };
+      fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageSize]);
@@ -95,11 +108,10 @@ const MessageWrapper = () => {
   useEffect(() => {
     // if pagesige is 0 then its a first page
     console.log("pageSize for message added", pageSize);
-    console.log("message added", messageAdded);
     if (pageSize === 0) {
       scrollToBottom();
     } else {
-      // scrollToTop();
+      scrollToTop();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messageAdded]);
@@ -110,10 +122,14 @@ const MessageWrapper = () => {
     messagesEndRef.current.scrollIntoView({ behavior: "auto" });
   };
 
-  // const scrollToTop = () => {
-  //   if (chatRef?.current?.children[21])
-  //     chatRef.current.children[21].scrollIntoView({ behavior: "auto" });
-  // };
+  const scrollToTop = () => {
+    console.log("scrollToTop", chatRef?.current?.children[19]);
+    if (chatRef?.current?.children[19])
+      chatRef.current.children[19].scrollIntoView({
+        behavior: "auto",
+        block: "start",
+      });
+  };
 
   const messagesEndRef = useRef(null);
 
@@ -131,18 +147,13 @@ const MessageWrapper = () => {
     if (inView) {
       setPageSize((pageSize) => pageSize + 1);
     }
-    // chatRef.current.childNodes[9].scrollIntoView({
-    //   behavior: "smooth",
-    //   block: "end",
-    // });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView]);
 
   return (
     <div className="chat--wrapper">
       {totalMessage.length > 0 ? (
         <>
-          {countMessage > pageSize && (
+          {countMessage > pageSize * 20 + 20 && (
             <Skeleton
               variant="text"
               height={130}
