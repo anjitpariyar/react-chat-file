@@ -10,16 +10,10 @@ import {
   collection,
   query,
   orderBy,
-  startAfter,
-  limit,
   getDocs,
   limitToLast,
   onSnapshot,
-  getDoc,
-  doc,
   endBefore,
-  endAt,
-  startAt,
 } from "firebase/firestore";
 
 const MessageWrapper = () => {
@@ -79,7 +73,7 @@ const MessageWrapper = () => {
   // added data when scrolling is update
   useEffect(() => {
     if (pageSize > 0) {
-      console.log("pageSize", lastVisible.data().text);
+      // console.log("pageSize", lastVisible.data().text);
       const nextQuery = query(
         dataRef,
         orderBy("timestamp", "asc"),
@@ -94,7 +88,7 @@ const MessageWrapper = () => {
         querySnapshot.forEach((doc) => {
           addedData.push({ id: doc.id, data: doc.data() });
         });
-        console.log("add", addedData);
+        // console.log("add", addedData);
         setAddedMessage((messageAdded) => [
           ...new Set([...addedData, ...messageAdded]),
         ]);
@@ -107,7 +101,7 @@ const MessageWrapper = () => {
   // scroll into view
   useEffect(() => {
     // if pagesige is 0 then its a first page
-    console.log("pageSize for message added", pageSize);
+    // console.log("pageSize for message added", pageSize);
     if (pageSize === 0) {
       scrollToBottom();
     } else {
@@ -123,7 +117,7 @@ const MessageWrapper = () => {
   };
 
   const scrollToTop = () => {
-    console.log("scrollToTop", chatRef?.current?.children[19]);
+    // console.log("scrollToTop", chatRef?.current?.children[19]);
     if (chatRef?.current?.children[19])
       chatRef.current.children[19].scrollIntoView({
         behavior: "auto",

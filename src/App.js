@@ -4,8 +4,7 @@ import Personalized from "./Components/Personalized";
 
 import db from "./Components/Firebase/Firebase";
 import MessageWrapper from "./Components/MessageWrapper";
-// import firebase from "firebase/compat/app";
-
+import Welcome from "./Components/Welcome";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 function App() {
@@ -77,7 +76,7 @@ function App() {
   const send = async (e) => {
     e.preventDefault();
     try {
-      const docRef = await addDoc(collection(db, "chat12"), {
+      await addDoc(collection(db, "chat12"), {
         ...data,
         timestamp: serverTimestamp(),
       });
@@ -127,7 +126,7 @@ function App() {
         </section>
       </div>
 
-      {/* <Welcome /> */}
+      <Welcome />
     </div>
   );
 }

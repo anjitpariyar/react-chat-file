@@ -37,14 +37,19 @@ body.yellow .MuiPopover-paper .MuiRadio-colorSecondary.Mui-checked + span {
 }
 body.dark,
 body.dark form,
-body.dark .MuiPopover-paper {
+body.dark .MuiPopover-paper,
+body.dark .welcome--part {
   background-color: #3c3c3c;
-  color: #f2f2f2;
+  color: #fff;
+}
+
+body.dark .welcome--part .widget .section__title {
+  background-color: #222;
 }
 
 body.dark .form-control {
   border-color: #868686;
-  color: #f2f2f2;
+  color: #fff;
 }
 
 body.dark .form-control::placeholder,
@@ -52,12 +57,12 @@ body.dark svg,
 body.dark svg *,
 body.dark form button,
 body.dark .MuiPopover-paper .MuiFormControlLabel-root {
-  color: #f2f2f2;
-  fill: #f2f2f2;
+  color: #fff;
+  fill: #fff;
 }
 
 body.dark .chatbox-wrapper.active h2 {
-  background-color: #f2f2f2;
+  background-color: #fff;
   color: var(--dark);
 }
 body.dark .MuiPopover-root .MuiPopover-paper,
@@ -96,7 +101,7 @@ form {
   background-color: transparent;
   border-radius: var(--br);
   padding: 0 20px;
-  border: 6px double var(--dark);
+  border: 2px solid var(--dark);
   font-size: 1em;
   outline: none;
   box-shadow: none;
@@ -176,6 +181,10 @@ button svg {
   transform: rotate(45deg);
   transition: 0.3s ease;
 }
+.link {
+  color: currentColor;
+  word-break: break-all;
+}
 
 .close {
   text-align: right;
@@ -221,7 +230,7 @@ button svg {
 
 .Mui-checked,
 .Mui-checked + span {
-  color: #f2f2f2 !important;
+  color: #fff !important;
 }
 
 .MuiPopover-paper .MuiTypography-body1,
@@ -243,12 +252,15 @@ button svg {
 }
 
 @media screen and (max-width: 600px) {
+  :root {
+    --br: 10px;
+  }
   body {
     font-size: 14px;
   }
   .form-control {
     height: 46px;
-    border-width: 5px;
+    /* border-width: 5px; */
     padding: 0 14px;
   }
   .section__rule {

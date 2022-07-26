@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
@@ -16,7 +16,7 @@ import ListItemText from "@mui/material/ListItemText";
 
 function Personalized(props) {
   // console.log('askNotification ' + askNotification )
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
@@ -27,7 +27,7 @@ function Personalized(props) {
     setAnchorEl(null);
   };
 
-  const [value, setValue] = React.useState("pruple");
+  const [value, setValue] = useState("pruple");
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -35,8 +35,14 @@ function Personalized(props) {
     document.querySelector("body").classList.add(event.target.value);
     // theme(event.target.value);
     // console.log(askTheme);
-    localStorage.setItem("theme", "hi");
+    localStorage.setItem("theme", event.target.value);
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("theme")) {
+      setValue(localStorage.getItem("theme"));
+    }
+  }, []);
 
   return (
     <div className="personalized">

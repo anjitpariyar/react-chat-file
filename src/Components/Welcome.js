@@ -33,7 +33,15 @@ function Welcome(props) {
           </h2>
           <p>
             IP address and location stored in database for safety purpose.
-            welcome to use vpn . for advice you can dm me in insta @limbo_anj
+            welcome to use vpn . for advice you can dm me in insta{" "}
+            <a
+              href="https://www.instagram.com/limbo_anj/"
+              className="link"
+              target="_blank"
+              rel="noreferrer"
+            >
+              @limbo_anj
+            </a>
           </p>
         </div>
 
