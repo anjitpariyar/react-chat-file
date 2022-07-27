@@ -34,8 +34,6 @@ function App() {
     fetch("http://ip-api.com/json/")
       .then((response) => response.json())
       .then((data) => {
-        handleChange("nameDevice", data?.query || "NA");
-        handleChange("username", data?.query);
         handleChange("fullLocation", {
           ip: data?.query,
           city: data?.city,
@@ -43,15 +41,6 @@ function App() {
           latitude: data?.lat,
           longitude: data?.lon,
         });
-
-        // setting usernaeme from fetch
-        if (localStorage.getItem("name")) {
-          handleChange("nameDevice", localStorage.getItem("name"));
-        } else if (data?.query) {
-          localStorage.setItem("name", `${data?.query}`);
-        } else {
-          localStorage.setItem("name", "unknown");
-        }
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -59,14 +48,26 @@ function App() {
   };
 
   // this uniqid will work as user id to detech who is sending a message
-  const getUniqId = async () => {
-    try {
-      let response = await fetch(`https://www.uuidtools.com/api/generate/v1`);
-      console.log("response", response.json());
-    } catch (err) {
-      console.error(err);
-      // Handle errors here
-    }
+  const getUniqId = () => {
+    // https://www.uuidtools.com/api/generate/v1/count/1
+    fetch("https://www.uuidtools.com/api/generate/v1/count/1")
+      .then((response) => response.json())
+      .then((data) => {
+        const id = data[0];
+        handleChange("nameDevice", id || "NA");
+        handleChange("username", id);
+        // setting usernaeme from fetch
+        if (localStorage.getItem("name")) {
+          handleChange("nameDevice", localStorage.getItem("name"));
+        } else if (id) {
+          localStorage.setItem("name", `${id}`);
+        } else {
+          localStorage.setItem("name", "unknown");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   // add location
