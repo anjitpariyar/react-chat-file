@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./Welcome.css";
 
-function Welcome(props) {
+function Welcome() {
   const [count, setCount] = useState(6);
   const timerToClearSomewhere = useRef(null);
   const welcomeRef = useRef(null);
