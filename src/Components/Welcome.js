@@ -40,8 +40,9 @@ function Welcome() {
               target="_blank"
               rel="noreferrer"
             >
-              @limbo_anj
+              @limbo_anj.
             </a>
+            (V{process.env.REACT_APP_VERSION})
           </p>
         </div>
 
