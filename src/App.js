@@ -4,7 +4,7 @@ import Personalized from "./Components/Personalized";
 
 import db from "./Components/Firebase/Firebase";
 import MessageWrapper from "./Components/MessageWrapper";
-import Welcome from "./Components/Welcome";
+// import Welcome from "./Components/Welcome";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 function App() {
@@ -43,6 +43,8 @@ function App() {
           latitude: data?.lat,
           longitude: data?.lon,
         });
+
+        // setting usernaeme from fetch
         if (localStorage.getItem("name")) {
           handleChange("nameDevice", localStorage.getItem("name"));
         } else if (data?.query) {
@@ -55,8 +57,21 @@ function App() {
         console.error("Error:", error);
       });
   };
+
+  // this uniqid will work as user id to detech who is sending a message
+  const getUniqId = async () => {
+    try {
+      let response = await fetch(`https://www.uuidtools.com/api/generate/v1`);
+      console.log("response", response.json());
+    } catch (err) {
+      console.error(err);
+      // Handle errors here
+    }
+  };
+
   // add location
   useEffect(() => {
+    getUniqId();
     getUserGeoLocation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -75,16 +90,21 @@ function App() {
   // submit me
   const send = async (e) => {
     e.preventDefault();
+    handleChange("text", "");
+
     try {
-      await addDoc(collection(db, "chat12"), {
+      let docRef = await addDoc(collection(db, "chat12"), {
         ...data,
         timestamp: serverTimestamp(),
       });
+
+      if (docRef) {
+      }
       // console.log("Document written with ID: ", docRef.id);
     } catch (e) {
       console.error("Error adding document: ", e);
+      handleChange("text", "");
     }
-    handleChange("text", "");
   };
 
   return (
@@ -126,7 +146,7 @@ function App() {
         </section>
       </div>
 
-      <Welcome />
+      {/* <Welcome /> */}
     </div>
   );
 }
