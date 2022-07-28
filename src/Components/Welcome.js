@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./Welcome.css";
+import packageJson from "../../package.json";
 
 function Welcome() {
   const [count, setCount] = useState(6);
@@ -42,7 +43,7 @@ function Welcome() {
             >
               @limbo_anj.
             </a>
-            (V{process.env.REACT_APP_VERSION})
+            (V{packageJson.version})
           </p>
         </div>
 

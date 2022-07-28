@@ -4,7 +4,7 @@ import Personalized from "./Components/Personalized";
 
 import db from "./Components/Firebase/Firebase";
 import MessageWrapper from "./Components/MessageWrapper";
-import Welcome from "./Components/Welcome";
+// import Welcome from "./Components/Welcome";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 function App() {
@@ -147,7 +147,7 @@ function App() {
         </section>
       </div>
 
-      <Welcome />
+      {/* <Welcome /> */}
     </div>
   );
 }
