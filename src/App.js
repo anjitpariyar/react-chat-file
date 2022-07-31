@@ -1,9 +1,9 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
 import Personalized from "./Components/Personalized";
-
 import db from "./Components/Firebase/Firebase";
 import MessageWrapper from "./Components/MessageWrapper";
+import MessageInput from "./Components/MessageInput";
 // import Welcome from "./Components/Welcome";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
@@ -20,11 +20,12 @@ function App() {
       longitude: "",
     },
     reply: "",
-    imageurl: "",
+    imageurl:
+      "https://res.cloudinary.com/dem2xvk2e/image/upload/v1659123800/chat/sk2ajxogiikezt7sdfan.png",
     timestamp: "",
   });
 
-  const { text } = data;
+  const { text, imageurl } = data;
   const [theme, setTheme] = useState("purple");
   const handleChange = (name, value) => {
     setData((data) => ({ ...data, [name]: value }));
@@ -49,7 +50,6 @@ function App() {
 
   // this uniqid will work as user id to detech who is sending a message
   const getUniqId = () => {
-    // https://www.uuidtools.com/api/generate/v1/count/1
     fetch("https://www.uuidtools.com/api/generate/v1/count/1")
       .then((response) => response.json())
       .then((data) => {
@@ -114,36 +114,12 @@ function App() {
         <section className="section__rule">
           <Personalized theme={(theme) => setTheme(theme)} askTheme={theme} />
           <MessageWrapper />
-          <form method="" action="#!" onSubmit={send}>
-            <div className="form-group">
-              <input
-                className="form-control"
-                placeholder="write your message"
-                value={text}
-                onChange={(event) => handleChange("text", event.target.value)}
-                required
-                autoFocus
-                // autoComplete={text.toString()}
-              />
-
-              <button type="submit" disabled={!text}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="48.251"
-                  height="48.251"
-                  viewBox="0 0 48.251 48.251"
-                >
-                  <path
-                    id="Path_2"
-                    data-name="Path 2"
-                    d="M34.338,2.4a1.246,1.246,0,0,1,.257,1.388L20.5,35.5a1.246,1.246,0,0,1-2.285-.017L13.131,23.607,1.254,18.519a1.246,1.246,0,0,1-.015-2.282L32.95,2.143a1.246,1.246,0,0,1,1.385.257Z"
-                    transform="translate(23.397 -1.865) rotate(41)"
-                    fillRule="evenodd"
-                  />
-                </svg>
-              </button>
-            </div>
-          </form>
+          <MessageInput
+            send={send}
+            text={text}
+            handleChange={handleChange}
+            imageurl={imageurl}
+          />
         </section>
       </div>
 
