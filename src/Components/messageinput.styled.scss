@@ -16,7 +16,8 @@
     bottom: calc(100% + 5px);
     left: 4px;
     position: absolute;
-    background-color: var(--primary);
+    background-color: var(--white);
+    border-radius: 7px;
     img {
       object-fit: cover;
       height: 100%;

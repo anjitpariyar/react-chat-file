@@ -1,67 +1,41 @@
 import React, { useState } from "react";
 import "./messageinput.styled.scss";
 import PhotoRoundedIcon from "@mui/icons-material/PhotoRounded";
-import axios from "axios";
 import ClearIcon from "@mui/icons-material/Clear";
-import Skeleton from "@mui/material/Skeleton";
-// cloudinary.config({
-//   cloud_name: process.env.REACT_APP_CLOUD_NAME,
-//   api_key: process.env.REACT_APP_API_KEY,
-//   api_secret: process.env.REACT_APP_API_SECRET,
-// });
 
-const MessageInput = ({ send, text, handleChange, imageurl }) => {
-  const [imgLoader, setimgLoader] = useState(false);
-  const API = async (image) => {
-    setimgLoader(true);
-    const data = new FormData();
-    data.append("file", image);
-    data.append("upload_preset", process.env.REACT_APP_PRESET_NAME);
-    data.append("cloud_name", process.env.REACT_APP_CLOUD_NAME);
-    data.append("folder", "chat");
-
-    try {
-      const resp = await axios.post(
-        `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUD_NAME}/image/upload`,
-        data
-      );
-      // setimageData({url: resp.data.url, public_id: resp.data.public_id});
-      console.log("resp", resp);
-      handleChange("imageurl", resp.data.url);
-      setimgLoader(false);
-    } catch (err) {
-      console.log("errr : ", err);
-      handleChange("imageurl", "");
-      setimgLoader(false);
-      alert("Error in uploading  image ");
-    }
-  };
+const MessageInput = ({ send, text, handleChange, setFile }) => {
+  const [tempImg, setempImg] = useState("");
 
   const ImageUpload = (event) => {
     const file = event.target.files[0];
-    console.log(file);
     if (file.size / (1024 * 1024) > 5) {
       alert("you can only upload images under 5MB");
     } else {
-      API(file);
+      // API(file);
+      const fileReader = new FileReader();
+      fileReader.onload = (e) => {
+        const { result } = e.target;
+        setempImg(result);
+      };
+      fileReader.readAsDataURL(file);
+      setFile(file);
     }
+  };
+
+  const ImageDelete = () => {
+    setempImg("");
+    setFile("");
   };
 
   return (
     <form method="" action="#!" onSubmit={send} className="messageInput">
       <div className="form-group">
-        {!imgLoader ? (
-          imageurl && (
-            <div className="imput--img">
-              <img src={imageurl} alt="none" />
-              <span className="cross">
-                <ClearIcon />
-              </span>
-            </div>
-          )
-        ) : (
+        {tempImg && (
           <div className="imput--img">
-            <Skeleton variant="rectangular" width={60} height={60} />
+            <img src={tempImg} alt="loading" />
+            <span className="cross" onClick={ImageDelete}>
+              <ClearIcon />
+            </span>
           </div>
         )}
         <input

@@ -1,11 +1,10 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
 import Personalized from "./Components/Personalized";
-import db from "./Components/Firebase/Firebase";
 import MessageWrapper from "./Components/MessageWrapper";
 import MessageInput from "./Components/MessageInput";
 // import Welcome from "./Components/Welcome";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { ImageUploadAPI, sendMessageAPI } from "./Components/API";
 
 function App() {
   const [data, setData] = useState({
@@ -20,10 +19,13 @@ function App() {
       longitude: "",
     },
     reply: "",
-    imageurl:
-      "https://res.cloudinary.com/dem2xvk2e/image/upload/v1659123800/chat/sk2ajxogiikezt7sdfan.png",
+    imageurl: "",
     timestamp: "",
   });
+
+  // file to upload image before submit
+
+  const [file, setFile] = useState(null);
 
   const { text, imageurl } = data;
   const [theme, setTheme] = useState("purple");
@@ -88,23 +90,38 @@ function App() {
     }
   }, [theme]);
 
+  const submitMessageFirebase = async () => {
+    try {
+      let docRef = sendMessageAPI(data);
+      console.log("docRef", docRef);
+      if (docRef) {
+        handleChange("text", "");
+        handleChange("imageurl", "");
+      }
+    } catch (e) {
+      console.error("Error adding document: ", e);
+      handleChange("text", "");
+      handleChange("imageurl", "");
+    }
+  };
   // submit me
   const send = async (e) => {
     e.preventDefault();
     handleChange("text", "");
 
-    try {
-      let docRef = await addDoc(collection(db, "chat12"), {
-        ...data,
-        timestamp: serverTimestamp(),
-      });
-
-      if (docRef) {
-      }
-      // console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-      handleChange("text", "");
+    if (file) {
+      ImageUploadAPI(file)
+        .then((resp) => {
+          handleChange("imageurl", resp.data.url);
+          submitMessageFirebase();
+        })
+        .catch((err) => {
+          console.log("err", err);
+          handleChange("imageurl", "");
+          submitMessageFirebase();
+        });
+    } else {
+      submitMessageFirebase();
     }
   };
 
@@ -119,6 +136,7 @@ function App() {
             text={text}
             handleChange={handleChange}
             imageurl={imageurl}
+            setFile={setFile}
           />
         </section>
       </div>
