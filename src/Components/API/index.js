@@ -15,8 +15,8 @@ export const ImageUploadAPI = async (image) => {
       data
     );
     // setimageData({url: resp.data.url, public_id: resp.data.public_id});
-    console.log("resp", resp);
-    return resp;
+    // console.log("resp", resp);
+    return resp?.data?.url;
     // handleChange("imageurl", resp.data.url);
   } catch (err) {
     // console.log("errr : ", err);
@@ -27,17 +27,18 @@ export const ImageUploadAPI = async (image) => {
 };
 
 export const sendMessageAPI = async (data) => {
-  try {
-    let docRef = await addDoc(collection(db, "chat12"), {
-      ...data,
-      timestamp: serverTimestamp(),
-    });
+  return new Promise(async (resolve, reject) => {
+    try {
+      let { id } = await addDoc(collection(db, "chat13"), {
+        ...data,
+        timestamp: serverTimestamp(),
+      });
+      resolve(id);
 
-    return docRef;
-    // console.log("Document written with ID: ", docRef.id);
-  } catch (e) {
-    console.error("Error adding document: ", e);
-    return e;
-    // handleChange("text", "");
-  }
+      // console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      reject(e);
+      // handleChange("text", "");
+    }
+  });
 };

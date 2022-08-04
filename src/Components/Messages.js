@@ -3,8 +3,7 @@ import Tooltip from "@mui/material/Tooltip";
 
 const Messages = (props) => {
   // console.log(props);
-  const { name, username, text, timestamp, index, nameDevice, imageurl } =
-    props;
+  const { name, username, text, timestamp, index, nameDevice } = props;
   const isUser =
     username === name || nameDevice === localStorage.getItem("name");
   const [timeNow, settimeNow] = useState(null);

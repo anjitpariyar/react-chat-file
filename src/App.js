@@ -91,10 +91,13 @@ function App() {
   }, [theme]);
 
   const submitMessageFirebase = async () => {
+    console.log("before data", data);
+
     try {
-      let docRef = sendMessageAPI(data);
-      console.log("docRef", docRef);
-      if (docRef) {
+      let res = await sendMessageAPI(data);
+      console.log("res", res);
+      if (res) {
+        console.log("res.id", res);
         handleChange("text", "");
         handleChange("imageurl", "");
       }
@@ -107,13 +110,18 @@ function App() {
   // submit me
   const send = async (e) => {
     e.preventDefault();
-    handleChange("text", "");
+    // handleChange("text", "");
 
     if (file) {
+      console.log("file", file);
       ImageUploadAPI(file)
         .then((resp) => {
-          handleChange("imageurl", resp.data.url);
-          submitMessageFirebase();
+          console.log("resp", resp);
+          if (resp) {
+            handleChange("imageurl", resp);
+            console.log("before data inside", data);
+            submitMessageFirebase();
+          }
         })
         .catch((err) => {
           console.log("err", err);
@@ -121,6 +129,7 @@ function App() {
           submitMessageFirebase();
         });
     } else {
+      console.log("nofile");
       submitMessageFirebase();
     }
   };

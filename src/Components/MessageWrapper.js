@@ -29,7 +29,7 @@ const MessageWrapper = () => {
   const [pageSize, setPageSize] = useState(0);
 
   // firebase Ref
-  const dataRef = collection(db, "chat12");
+  const dataRef = collection(db, "chat13");
 
   // last visible item
   const [lastVisible, setLastVisible] = useState(null);

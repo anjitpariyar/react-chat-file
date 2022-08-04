@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./messageinput.styled.scss";
 import PhotoRoundedIcon from "@mui/icons-material/PhotoRounded";
 import ClearIcon from "@mui/icons-material/Clear";
 
-const MessageInput = ({ send, text, handleChange, setFile }) => {
+const MessageInput = ({ send, text, handleChange, setFile, imageurl }) => {
   const [tempImg, setempImg] = useState("");
 
   const ImageUpload = (event) => {
@@ -23,9 +23,17 @@ const MessageInput = ({ send, text, handleChange, setFile }) => {
   };
 
   const ImageDelete = () => {
-    setempImg("");
-    setFile("");
+    if (tempImg) {
+      setempImg("");
+      setFile("");
+    }
   };
+  useEffect(() => {
+    if (!imageurl) {
+      ImageDelete();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageurl]);
 
   return (
     <form method="" action="#!" onSubmit={send} className="messageInput">
