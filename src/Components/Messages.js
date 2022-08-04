@@ -3,7 +3,8 @@ import Tooltip from "@mui/material/Tooltip";
 
 const Messages = (props) => {
   // console.log(props);
-  const { name, username, text, timestamp, index, nameDevice } = props;
+  const { name, username, text, timestamp, index, nameDevice, imageurl } =
+    props;
   const isUser =
     username === name || nameDevice === localStorage.getItem("name");
   const [timeNow, settimeNow] = useState(null);
@@ -41,27 +42,30 @@ const Messages = (props) => {
       className={isUser ? "active chatbox-wrapper" : "unknown chatbox-wrapper"}
       key={index}
     >
-      <h2>
-        {islLnk
-          ? textArray.map((text, index) => {
-              if (index === 1) {
-                return (
-                  <a
-                    href={text}
-                    target="_blank"
-                    rel="noreferrer"
-                    key={index}
-                    className="link"
-                  >
-                    {text}
-                  </a>
-                );
-              } else {
-                return <span key={index}>{text}</span>;
-              }
-            })
-          : text || "Message is deleted"}
-      </h2>
+      <div className="chatbox-wrapper-inner">
+        {imageurl && <img src={imageurl} alt="chat anonymous" />}
+        <h2>
+          {islLnk
+            ? textArray.map((text, index) => {
+                if (index === 1) {
+                  return (
+                    <a
+                      href={text}
+                      target="_blank"
+                      rel="noreferrer"
+                      key={index}
+                      className="link"
+                    >
+                      {text}
+                    </a>
+                  );
+                } else {
+                  return <span key={index}>{text}</span>;
+                }
+              })
+            : text || "Message is deleted"}
+        </h2>
+      </div>
       <Tooltip
         title={
           timestamp?.seconds

@@ -91,13 +91,9 @@ function App() {
   }, [theme]);
 
   const submitMessageFirebase = async () => {
-    console.log("before data", data);
-
     try {
       let res = await sendMessageAPI(data);
-      console.log("res", res);
       if (res) {
-        console.log("res.id", res);
         handleChange("text", "");
         handleChange("imageurl", "");
       }
@@ -113,13 +109,10 @@ function App() {
     // handleChange("text", "");
 
     if (file) {
-      console.log("file", file);
       ImageUploadAPI(file)
         .then((resp) => {
-          console.log("resp", resp);
           if (resp) {
             handleChange("imageurl", resp);
-            console.log("before data inside", data);
             submitMessageFirebase();
           }
         })

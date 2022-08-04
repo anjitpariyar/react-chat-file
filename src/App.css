@@ -76,11 +76,6 @@ body.dark .chatbox-wrapper h2 {
   width: 90%;
   margin: 00px auto;
 }
-.chat--wrapper {
-  padding-bottom: 20px;
-  position: relative;
-  min-height: calc(100vh - 120px);
-}
 
 form {
   position: sticky;
@@ -132,42 +127,13 @@ button svg {
   fill: var(--dark);
 }
 
-.chatbox-wrapper {
-  display: flex;
-  align-items: center;
-  max-width: 800px;
-  width: max-content;
-}
-.chatbox-wrapper h2 {
-  border: 2px solid var(--dark);
-  border-radius: var(--br);
-  padding: 20px 30px;
-  flex-grow: 2;
-  font-size: 1.2em;
-  font-weight: 500;
-  box-shadow: -4px 5px var(--dark);
-  margin: 20px;
-}
-
-.chatbox-wrapper.active h2 {
-  background-color: var(--yellow);
-}
-.chatbox-wrapper.active {
-  flex-direction: row-reverse;
-  margin-left: auto;
-}
-.chatbox-wrapper time {
-  margin: 0 10px;
-  font-size: 14px;
-  opacity: 0.8;
-  white-space: nowrap;
-}
 .personalized {
   position: fixed;
   z-index: 99;
   top: 10px;
   right: 5%;
 }
+
 .personalized .MuiButton-text {
   padding: 10px;
   min-width: auto;

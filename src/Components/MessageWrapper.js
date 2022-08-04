@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
+import "./message.style.scss";
 
 import Messages from "./Messages";
 import Skeleton from "@mui/material/Skeleton";
