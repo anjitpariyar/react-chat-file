@@ -43,7 +43,17 @@ const Messages = (props) => {
       key={index}
     >
       <div className="chatbox-wrapper-inner">
-        {imageurl && <img src={imageurl} alt="chat anonymous" />}
+        {imageurl && (
+          <a className="image--wrapper" href={imageurl}>
+            <img
+              src={imageurl.replace(
+                "/upload/",
+                "/upload/c_thumb,w_200,g_face/"
+              )}
+              alt="chat anonymous"
+            />
+          </a>
+        )}
         <h2>
           {islLnk
             ? textArray.map((text, index) => {

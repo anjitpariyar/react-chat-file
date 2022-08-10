@@ -6,6 +6,8 @@ import Skeleton from "@mui/material/Skeleton";
 
 import db from "./Firebase/Firebase";
 import { useInView } from "react-intersection-observer";
+import "lightgallery.js/dist/css/lightgallery.css";
+import { LightgalleryProvider } from "react-lightgallery";
 
 import {
   collection,
@@ -145,10 +147,38 @@ const MessageWrapper = () => {
   }, [inView]);
 
   return (
-    <div className="chat--wrapper">
-      {totalMessage.length > 0 ? (
-        <>
-          {countMessage > pageSize * 20 + 20 && (
+    <LightgalleryProvider
+      lightgallerySettings={
+        {
+          // settings: https://sachinchoolur.github.io/lightgallery.js/docs/api.html
+        }
+      }
+      group="any"
+    >
+      <div className="chat--wrapper">
+        {totalMessage.length > 0 ? (
+          <>
+            {countMessage > pageSize * 20 + 20 && (
+              <Skeleton
+                variant="text"
+                height={130}
+                width={"30%"}
+                style={{
+                  minWidth: "200px",
+                  borderRadius: "var(--br)",
+                  boxShadow: "-6px 9px var(--dark)",
+                }}
+                ref={ref}
+              />
+            )}
+            <div ref={chatRef}>
+              {totalMessage.map(({ id, data }) => (
+                <Messages key={id} {...data} />
+              ))}
+            </div>
+          </>
+        ) : (
+          <div>
             <Skeleton
               variant="text"
               height={130}
@@ -158,55 +188,36 @@ const MessageWrapper = () => {
                 borderRadius: "var(--br)",
                 boxShadow: "-6px 9px var(--dark)",
               }}
-              ref={ref}
             />
-          )}
-          <div ref={chatRef}>
-            {totalMessage.map(({ id, data }) => (
-              <Messages key={id} {...data} />
-            ))}
+            <br />
+            <Skeleton
+              variant="text"
+              height={130}
+              width={"20%"}
+              style={{
+                minWidth: "150px",
+                borderRadius: "var(--br)",
+                boxShadow: "-6px 9px var(--dark)",
+              }}
+            />
+            <br />
+            <Skeleton
+              variant="text"
+              height={130}
+              width={"30%"}
+              style={{
+                minWidth: "200px",
+                borderRadius: "var(--br)",
+                boxShadow: "-6px 9px var(--dark)",
+              }}
+            />
+            <br />
           </div>
-        </>
-      ) : (
-        <div>
-          <Skeleton
-            variant="text"
-            height={130}
-            width={"30%"}
-            style={{
-              minWidth: "200px",
-              borderRadius: "var(--br)",
-              boxShadow: "-6px 9px var(--dark)",
-            }}
-          />
-          <br />
-          <Skeleton
-            variant="text"
-            height={130}
-            width={"20%"}
-            style={{
-              minWidth: "150px",
-              borderRadius: "var(--br)",
-              boxShadow: "-6px 9px var(--dark)",
-            }}
-          />
-          <br />
-          <Skeleton
-            variant="text"
-            height={130}
-            width={"30%"}
-            style={{
-              minWidth: "200px",
-              borderRadius: "var(--br)",
-              boxShadow: "-6px 9px var(--dark)",
-            }}
-          />
-          <br />
-        </div>
-      )}
+        )}
 
-      <div ref={messagesEndRef} />
-    </div>
+        <div ref={messagesEndRef} />
+      </div>
+    </LightgalleryProvider>
   );
 };
 
