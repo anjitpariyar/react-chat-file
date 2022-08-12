@@ -209,15 +209,6 @@ button svg {
   background-color: var(--dark) !important;
 }
 
-@media screen and (max-width: 840px) {
-  .chatbox-wrapper {
-    max-width: 100%;
-  }
-  .chatbox-wrapper time {
-    margin: 0;
-  }
-}
-
 @media screen and (max-width: 600px) {
   :root {
     --br: 10px;
@@ -233,16 +224,12 @@ button svg {
   .section__rule {
     width: 95%;
   }
-  .chatbox-wrapper h2 {
-    padding: 13px 24px;
-  }
+
   button svg {
     height: 28px;
     width: auto;
   }
-  .chatbox-wrapper h2 {
-    margin: 10px;
-  }
+
   .MuiPopover-root .MuiPopover-paper {
     right: 3px !important;
   }

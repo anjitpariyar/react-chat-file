@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Tooltip from "@mui/material/Tooltip";
+import { LightgalleryItem } from "react-lightgallery";
 
 const Messages = (props) => {
   // console.log(props);
@@ -44,15 +45,17 @@ const Messages = (props) => {
     >
       <div className="chatbox-wrapper-inner">
         {imageurl && (
-          <a className="image--wrapper" href={imageurl}>
-            <img
-              src={imageurl.replace(
-                "/upload/",
-                "/upload/c_thumb,w_200,g_face/"
-              )}
-              alt="chat anonymous"
-            />
-          </a>
+          <LightgalleryItem group="any" src={imageurl}>
+            <div className="image--wrapper" href={imageurl}>
+              <img
+                src={imageurl.replace(
+                  "/upload/",
+                  "/upload/c_thumb,w_200,g_face/"
+                )}
+                alt="chat anonymous"
+              />
+            </div>
+          </LightgalleryItem>
         )}
         <h2>
           {islLnk

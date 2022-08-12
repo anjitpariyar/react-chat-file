@@ -153,7 +153,6 @@ const MessageWrapper = () => {
           // settings: https://sachinchoolur.github.io/lightgallery.js/docs/api.html
         }
       }
-      group="any"
     >
       <div className="chat--wrapper">
         {totalMessage.length > 0 ? (
