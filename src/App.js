@@ -22,6 +22,7 @@ function App() {
     imageurl: "",
     timestamp: "",
   });
+  const [loader, setloader] = useState(false);
 
   // file to upload image before submit
 
@@ -96,17 +97,20 @@ function App() {
       if (res) {
         handleChange("text", "");
         handleChange("imageurl", "");
+        setloader(false);
       }
     } catch (e) {
       console.error("Error adding document: ", e);
       handleChange("text", "");
       handleChange("imageurl", "");
+      setloader(false);
     }
   };
   // submit me
   const send = async (e) => {
     e.preventDefault();
     // handleChange("text", "");
+    setloader(true);
 
     if (file) {
       ImageUploadAPI(file)
@@ -122,7 +126,6 @@ function App() {
           submitMessageFirebase();
         });
     } else {
-      console.log("nofile");
       submitMessageFirebase();
     }
   };
@@ -139,6 +142,7 @@ function App() {
             handleChange={handleChange}
             imageurl={imageurl}
             setFile={setFile}
+            loader={loader}
           />
         </section>
       </div>
