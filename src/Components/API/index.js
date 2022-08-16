@@ -16,7 +16,7 @@ export const ImageUploadAPI = async (image) => {
     );
     // setimageData({url: resp.data.url, public_id: resp.data.public_id});
     // console.log("resp", resp);
-    return resp?.data?.url;
+    return resp?.data;
     // handleChange("imageurl", resp.data.url);
   } catch (err) {
     // console.log("errr : ", err);
@@ -41,4 +41,21 @@ export const sendMessageAPI = async (data) => {
       // handleChange("text", "");
     }
   });
+};
+
+export const deleteImageAPI = async ({ publicId, signature, time }) => {
+  const formData = new FormData();
+  formData.append("public_id", publicId);
+  formData.append("signature", signature);
+  formData.append("api_key", process.env.REACT_APP_API_KEY);
+  formData.append("timestamp", time);
+  try {
+    const res = await axios.post(
+      `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUD_NAME}/image/destroy`,
+      formData
+    );
+    return res?.data;
+  } catch (err) {
+    return err;
+  }
 };

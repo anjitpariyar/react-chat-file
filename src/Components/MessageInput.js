@@ -1,85 +1,91 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./messageinput.styled.scss";
 import PhotoRoundedIcon from "@mui/icons-material/PhotoRounded";
 import ClearIcon from "@mui/icons-material/Clear";
-import axios from "axios";
-import { ImageUploadAPI } from "./Components/API";
+import { ImageUploadAPI, deleteImageAPI } from "./API";
+import Skeleton from "@mui/material/Skeleton";
 
-const MessageInput = ({
-  send,
-  text,
-  handleChange,
-  setFile,
-  imageurl,
-  loader,
-}) => {
-  const [tempImg, setempImg] = useState("");
+const MessageInput = ({ send, text, handleChange, imageurl }) => {
+  const [loader, setLoader] = useState(false);
+  const [imgObj, setImgObj] = useState({
+    publicId: "",
+    signature: "",
+    time: "",
+  });
 
   const ImageUpload = (event) => {
+    setLoader(true);
     const file = event.target.files[0];
     if (file.size / (1024 * 1024) > 5) {
       alert("you can only upload images under 5MB");
     } else {
-      // API(file);
-      const fileReader = new FileReader();
-      fileReader.onload = (e) => {
-        const { result } = e.target;
-        setempImg(result);
-      };
-      fileReader.readAsDataURL(file);
-      setFile(file);
+      ImageUploadAPI(file)
+        .then((resp) => {
+          if (resp) {
+            handleChange("imageurl", resp?.url);
+            console.log("resp", resp);
+            setImgObj({
+              ...imgObj,
+              publicId: resp.public_id,
+              signature: resp.signature,
+              time: new Date(resp.created_at).valueOf(),
+            });
+          }
+          setLoader(false);
+        })
+        .catch(() => {
+          alert("Error in uploading Image");
+          setLoader(false);
+        });
     }
   };
 
   const ImageDelete = () => {
-    if (tempImg) {
-      setempImg("");
-      setFile("");
+    if (imageurl) {
+      handleChange("imageurl", "");
+      deleteImageAPI(imgObj)
+        .then((resp) => {
+          if (resp) {
+            console.log("resp deleteImageAPI", resp);
+            setImgObj({ ...imgObj, publicId: "", signature: "", time: "" });
+          }
+        })
+        .catch(() => {
+          alert("Error in uploading Image");
+          setImgObj({ ...imgObj, publicId: "", signature: "", time: "" });
+        });
     }
   };
-  useEffect(() => {
-    if (!imageurl) {
-      ImageDelete();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [imageurl]);
-
-  const deleteImage = async () => {
-    const timestamp = new Date().getTime();
-    const formData = new FormData();
-    const signature = "060f23d7d3e79b14e66eaeccc4db143590e8bd16";
-    formData.append("public_id", "zloa8zupd0exnbdrd3rv");
-    formData.append("signature", signature);
-    formData.append("api_key", process.env.REACT_APP_API_KEY);
-    formData.append("timestamp", timestamp);
-    const res = await axios.post(
-      `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUD_NAME}/image/destroy`,
-      formData
-    );
-    console.log("res", res);
-  };
-
-  useEffect(() => {
-    deleteImage();
-  }, []);
 
   return (
     <form method="" action="#!" onSubmit={send} className="messageInput">
       <div className="form-group">
-        {tempImg && (
+        {loader ? (
           <div className="imput--img">
-            <img src={tempImg} alt="loading" />
-            <span className="cross" onClick={ImageDelete}>
-              <ClearIcon />
-            </span>
+            <Skeleton
+              variant="rectangular"
+              width={60}
+              height={60}
+              animation="wave"
+            />
           </div>
+        ) : (
+          imageurl && (
+            <div className="imput--img">
+              <img src={imageurl} alt="loading" />
+              <span className="cross" onClick={ImageDelete}>
+                <ClearIcon />
+              </span>
+            </div>
+          )
         )}
+
         <input
           className="form-control"
           placeholder="write your message"
           value={text}
           onChange={(event) => handleChange("text", event.target.value)}
-          required={tempImg ? false : true}
+          required={imageurl ? false : true}
           autoFocus
           title="You cannot send empty message"
 

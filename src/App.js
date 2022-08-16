@@ -4,7 +4,7 @@ import Personalized from "./Components/Personalized";
 import MessageWrapper from "./Components/MessageWrapper";
 import MessageInput from "./Components/MessageInput";
 // import Welcome from "./Components/Welcome";
-import { ImageUploadAPI, sendMessageAPI } from "./Components/API";
+import { sendMessageAPI } from "./Components/API";
 
 function App() {
   const [data, setData] = useState({
@@ -25,8 +25,6 @@ function App() {
   const [loader, setloader] = useState(false);
 
   // file to upload image before submit
-
-  const [file, setFile] = useState(null);
 
   const { text, imageurl } = data;
   const [theme, setTheme] = useState("purple");
@@ -91,7 +89,9 @@ function App() {
     }
   }, [theme]);
 
-  const submitMessageFirebase = async () => {
+  // submit me
+  const send = async (e) => {
+    e.preventDefault();
     try {
       let res = await sendMessageAPI(data);
       if (res) {
@@ -106,29 +106,6 @@ function App() {
       setloader(false);
     }
   };
-  // submit me
-  const send = async (e) => {
-    e.preventDefault();
-    // handleChange("text", "");
-    setloader(true);
-
-    if (file) {
-      ImageUploadAPI(file)
-        .then((resp) => {
-          if (resp) {
-            handleChange("imageurl", resp);
-            submitMessageFirebase();
-          }
-        })
-        .catch((err) => {
-          console.log("err", err);
-          handleChange("imageurl", "");
-          submitMessageFirebase();
-        });
-    } else {
-      submitMessageFirebase();
-    }
-  };
 
   return (
     <div className="App">
@@ -141,7 +118,6 @@ function App() {
             text={text}
             handleChange={handleChange}
             imageurl={imageurl}
-            setFile={setFile}
             loader={loader}
           />
         </section>
