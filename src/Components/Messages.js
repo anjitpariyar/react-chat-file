@@ -57,27 +57,30 @@ const Messages = (props) => {
             </div>
           </LightgalleryItem>
         )}
-        <h2>
-          {islLnk
-            ? textArray.map((text, index) => {
-                if (index === 1) {
-                  return (
-                    <a
-                      href={text}
-                      target="_blank"
-                      rel="noreferrer"
-                      key={index}
-                      className="link"
-                    >
-                      {text}
-                    </a>
-                  );
-                } else {
-                  return <span key={index}>{text}</span>;
-                }
-              })
-            : text || "Message is deleted"}
-        </h2>
+
+        {text && (
+          <h2>
+            {islLnk
+              ? textArray.map((text, index) => {
+                  if (index === 1) {
+                    return (
+                      <a
+                        href={text}
+                        target="_blank"
+                        rel="noreferrer"
+                        key={index}
+                        className="link"
+                      >
+                        {text}
+                      </a>
+                    );
+                  } else {
+                    return <span key={index}>{text}</span>;
+                  }
+                })
+              : text}
+          </h2>
+        )}
       </div>
       <Tooltip
         title={
