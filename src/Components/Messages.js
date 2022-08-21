@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Tooltip from "@mui/material/Tooltip";
-import { LightgalleryItem } from "react-lightgallery";
+import ReactBnbGallery from "react-bnb-gallery";
 
 const Messages = (props) => {
   // console.log(props);
@@ -11,6 +11,8 @@ const Messages = (props) => {
   const [timeNow, settimeNow] = useState(null);
   const [textArray, setTextArray] = useState([]);
   const [islLnk, setIslLnk] = useState(false);
+
+  // useState
 
   // convert time into readable formate
   useEffect(() => {
@@ -38,63 +40,74 @@ const Messages = (props) => {
     }
   }, [text]);
 
-  return (
-    <div
-      className={isUser ? "active chatbox-wrapper" : "unknown chatbox-wrapper"}
-      key={index}
-    >
-      <div className="chatbox-wrapper-inner">
-        {imageurl && (
-          <LightgalleryItem group="any" src={imageurl}>
-            <div className="image--wrapper" href={imageurl}>
-              <img
-                src={imageurl.replace(
-                  "/upload/",
-                  "/upload/c_thumb,w_200,g_face/"
-                )}
-                alt="chat anonymous"
-              />
-            </div>
-          </LightgalleryItem>
-        )}
+  const [showBox, setshowBox] = useState(false);
 
-        {text && (
-          <h2>
-            {islLnk
-              ? textArray.map((text, index) => {
-                  if (index === 1) {
-                    return (
-                      <a
-                        href={text}
-                        target="_blank"
-                        rel="noreferrer"
-                        key={index}
-                        className="link"
-                      >
-                        {text}
-                      </a>
-                    );
-                  } else {
-                    return <span key={index}>{text}</span>;
-                  }
-                })
-              : text}
-          </h2>
-        )}
-      </div>
-      <Tooltip
-        title={
-          timestamp?.seconds
-            ? new Date(timestamp.seconds * 1000).toLocaleString()
-            : "NA"
+  return (
+    <>
+      <div
+        className={
+          isUser ? "active chatbox-wrapper" : "unknown chatbox-wrapper"
         }
-        placement="top"
-        arrow
-        className={"tooltip"}
+        key={index}
       >
-        <time>{timeNow || "NA"}</time>
-      </Tooltip>
-    </div>
+        <div className="chatbox-wrapper-inner">
+          {imageurl && (
+            <>
+              <div className="image--wrapper" onClick={() => setshowBox(true)}>
+                <img
+                  src={imageurl.replace(
+                    "/upload/",
+                    "/upload/c_thumb,w_200,g_face/"
+                  )}
+                  alt="chat anonymous"
+                />
+              </div>
+              <ReactBnbGallery
+                show={showBox}
+                photos={imageurl}
+                onClose={() => setshowBox(false)}
+              />
+            </>
+          )}
+
+          {text && (
+            <h2>
+              {islLnk
+                ? textArray.map((text, index) => {
+                    if (index === 1) {
+                      return (
+                        <a
+                          href={text}
+                          target="_blank"
+                          rel="noreferrer"
+                          key={index}
+                          className="link"
+                        >
+                          {text}
+                        </a>
+                      );
+                    } else {
+                      return <span key={index}>{text}</span>;
+                    }
+                  })
+                : text}
+            </h2>
+          )}
+        </div>
+        <Tooltip
+          title={
+            timestamp?.seconds
+              ? new Date(timestamp.seconds * 1000).toLocaleString()
+              : "NA"
+          }
+          placement="top"
+          arrow
+          className={"tooltip"}
+        >
+          <time>{timeNow || "NA"}</time>
+        </Tooltip>
+      </div>
+    </>
   );
 };
 
