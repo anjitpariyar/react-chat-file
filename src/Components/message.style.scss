@@ -33,9 +33,10 @@
       // background-color: var(--white);
       width: 100%;
       min-height: 120px;
+      min-width: 240px;
       color: var(--white);
       overflow: hidden;
-      border-radius: var(--br) var(--br) 6px 5px;
+      border-radius: calc(var(--br) - 4px);
       display: block;
       cursor: pointer;
       img {
