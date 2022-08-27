@@ -18,11 +18,10 @@ function App() {
       latitude: "",
       longitude: "",
     },
-    reply: "",
+    reply: [{ id: "", value: "" }],
     imageurl: "",
     timestamp: "",
   });
-  const [loader, setloader] = useState(false);
 
   // file to upload image before submit
 
@@ -92,18 +91,18 @@ function App() {
   // submit me
   const send = async (e) => {
     e.preventDefault();
-    try {
-      let res = await sendMessageAPI(data);
-      if (res) {
+    if (text || imageurl) {
+      try {
+        let res = await sendMessageAPI(data);
         handleChange("text", "");
         handleChange("imageurl", "");
-        setloader(false);
+        if (res) {
+        }
+      } catch (e) {
+        console.error("Error adding document: ", e);
+        handleChange("text", "");
+        handleChange("imageurl", "");
       }
-    } catch (e) {
-      console.error("Error adding document: ", e);
-      handleChange("text", "");
-      handleChange("imageurl", "");
-      setloader(false);
     }
   };
 
@@ -118,7 +117,6 @@ function App() {
             text={text}
             handleChange={handleChange}
             imageurl={imageurl}
-            loader={loader}
           />
         </section>
       </div>

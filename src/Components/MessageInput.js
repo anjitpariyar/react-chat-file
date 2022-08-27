@@ -5,6 +5,15 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { ImageUploadAPI, deleteImageAPI } from "./API";
 import Skeleton from "@mui/material/Skeleton";
 
+/**
+ *
+ * @param {send is a  submit function} param0
+ * @param {text is a value of text} param1
+ * @param {imageurl is a  link to the image} param2
+ * @param {handleChange is a function that update the change in text} param3
+ * @returns
+ */
+
 const MessageInput = ({ send, text, handleChange, imageurl }) => {
   const [loader, setLoader] = useState(false);
   const [imgObj, setImgObj] = useState({
@@ -91,52 +100,28 @@ const MessageInput = ({ send, text, handleChange, imageurl }) => {
 
           // autoComplete={text.toString()}
         />
-        <label className="upimageLabel" htmlFor="upimage">
+        <label
+          className="upimageLabel"
+          htmlFor="upimage"
+          title={loader ? "your image is uploading" : "upload your image"}
+        >
           <PhotoRoundedIcon />
         </label>
-        <button type="submit">
-          {loader ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              xmlnsXlink="http://www.w3.org/1999/xlink"
-              style={{
-                margin: "auto",
-                display: "block",
-                shapeRendering: "auto",
-              }}
-              width="48.251"
-              height="48.251"
-              viewBox="0 0 50 50"
-              preserveAspectRatio="xMidYMid"
-            >
-              <circle cx="20" cy="20" r="6">
-                <animate
-                  attributeName="cy"
-                  dur="1s"
-                  repeatCount="indefinite"
-                  calcMode="spline"
-                  keySplines="0.45 0 0.9 0.55;0 0.45 0.55 0.9"
-                  keyTimes="0;0.5;1"
-                  values="23;77;23"
-                ></animate>
-              </circle>{" "}
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="48.251"
-              height="48.251"
-              viewBox="0 0 48.251 48.251"
-            >
-              <path
-                id="Path_2"
-                data-name="Path 2"
-                d="M34.338,2.4a1.246,1.246,0,0,1,.257,1.388L20.5,35.5a1.246,1.246,0,0,1-2.285-.017L13.131,23.607,1.254,18.519a1.246,1.246,0,0,1-.015-2.282L32.95,2.143a1.246,1.246,0,0,1,1.385.257Z"
-                transform="translate(23.397 -1.865) rotate(41)"
-                fillRule="evenodd"
-              />
-            </svg>
-          )}
+        <button type="submit" title="send">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="48.251"
+            height="48.251"
+            viewBox="0 0 48.251 48.251"
+          >
+            <path
+              id="Path_2"
+              data-name="Path 2"
+              d="M34.338,2.4a1.246,1.246,0,0,1,.257,1.388L20.5,35.5a1.246,1.246,0,0,1-2.285-.017L13.131,23.607,1.254,18.519a1.246,1.246,0,0,1-.015-2.282L32.95,2.143a1.246,1.246,0,0,1,1.385.257Z"
+              transform="translate(23.397 -1.865) rotate(41)"
+              fillRule="evenodd"
+            />
+          </svg>
         </button>
       </div>
       <input
@@ -145,6 +130,7 @@ const MessageInput = ({ send, text, handleChange, imageurl }) => {
         accept="image/*"
         onChange={ImageUpload}
         name="imageurl"
+        disabled={loader}
         hidden
       />
     </form>

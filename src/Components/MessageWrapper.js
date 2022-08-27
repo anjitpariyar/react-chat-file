@@ -164,7 +164,7 @@ const MessageWrapper = () => {
           )}
           <div ref={chatRef}>
             {totalMessage.map(({ id, data }) => (
-              <Messages key={id} {...data} />
+              <Messages key={id} {...data} id={id} />
             ))}
           </div>
         </>

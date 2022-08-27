@@ -4,8 +4,17 @@ import ReactBnbGallery from "react-bnb-gallery";
 
 const Messages = (props) => {
   // console.log(props);
-  const { name, username, text, timestamp, index, nameDevice, imageurl } =
-    props;
+  const {
+    name,
+    username,
+    text,
+    timestamp,
+    index,
+    nameDevice,
+    imageurl,
+    id,
+    reply,
+  } = props;
   const isUser =
     username === name || nameDevice === localStorage.getItem("name");
   const [timeNow, settimeNow] = useState(null);
@@ -59,7 +68,7 @@ const Messages = (props) => {
                     "/upload/",
                     "/upload/c_thumb,w_200,g_face/"
                   )}
-                  alt="chat anonymous"
+                  alt="if you are seeing this means this images had been deleted."
                 />
               </div>
               <ReactBnbGallery
@@ -104,7 +113,7 @@ const Messages = (props) => {
           arrow
           className={"tooltip"}
         >
-          <time>{timeNow || "NA"}</time>
+          <time>{timeNow || ".."}</time>
         </Tooltip>
       </div>
     </>

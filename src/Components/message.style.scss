@@ -66,6 +66,10 @@
 //   transition: 0.3s linear;
 // }
 
+.gallery-modal--overlay {
+  opacity: 0.75 !important;
+}
+
 @media screen and (max-width: 840px) {
   .chat--wrapper {
     .chatbox-wrapper {
