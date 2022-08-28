@@ -58,6 +58,7 @@ const Messages = (props) => {
           isUser ? "active chatbox-wrapper" : "unknown chatbox-wrapper"
         }
         key={index}
+        id={id}
       >
         <div className="chatbox-wrapper-inner">
           {imageurl && (

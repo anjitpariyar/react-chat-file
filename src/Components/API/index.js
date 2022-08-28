@@ -1,7 +1,47 @@
 import axios from "axios";
 import db from "../Firebase/Firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 
+export const sendMessageAPI = async (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let { id } = await addDoc(collection(db, "chat13"), {
+        ...data,
+        timestamp: serverTimestamp(),
+      });
+      resolve(id);
+
+      // console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      reject(e);
+      // handleChange("text", "");
+    }
+  });
+};
+
+// update message
+export const updateMessageAPI = async () => {
+  const messageRef = doc(db, "chat13", "NIFdnCB4m9GVLNrR6FK1");
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      let resp = await updateDoc(messageRef, { text: "weuhawdgha" });
+      resolve(resp);
+      // console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      reject(e);
+      // handleChange("text", "");
+    }
+  });
+};
+
+// image related api
 export const ImageUploadAPI = async (image) => {
   const data = new FormData();
   data.append("file", image);
@@ -24,23 +64,6 @@ export const ImageUploadAPI = async (image) => {
     alert("Error in uploading  image ");
     return err;
   }
-};
-
-export const sendMessageAPI = async (data) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let { id } = await addDoc(collection(db, "chat13"), {
-        ...data,
-        timestamp: serverTimestamp(),
-      });
-      resolve(id);
-
-      // console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      reject(e);
-      // handleChange("text", "");
-    }
-  });
 };
 
 export const deleteImageAPI = async ({ publicId, signature, time }) => {

@@ -4,7 +4,7 @@ import Personalized from "./Components/Personalized";
 import MessageWrapper from "./Components/MessageWrapper";
 import MessageInput from "./Components/MessageInput";
 // import Welcome from "./Components/Welcome";
-import { sendMessageAPI } from "./Components/API";
+import { sendMessageAPI, updateMessageAPI } from "./Components/API";
 
 function App() {
   const [data, setData] = useState({
@@ -18,7 +18,7 @@ function App() {
       latitude: "",
       longitude: "",
     },
-    reply: [{ id: "", value: "" }],
+    reaction: [{ id: "", value: "" }],
     imageurl: "",
     timestamp: "",
   });
@@ -74,6 +74,7 @@ function App() {
   useEffect(() => {
     getUniqId();
     getUserGeoLocation();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -104,6 +105,11 @@ function App() {
         handleChange("imageurl", "");
       }
     }
+  };
+
+  const updateMessage = async (e) => {
+    let res = await updateMessageAPI();
+    console.log("res", res);
   };
 
   return (
