@@ -62,14 +62,20 @@ body.dark .MuiPopover-paper .MuiFormControlLabel-root {
   fill: #fff;
 }
 
-body.dark .chatbox-wrapper.active h2 {
+body.dark .chatbox-wrapper.active .chatbox-wrapper-inner {
   background-color: #fff;
   color: var(--dark);
 }
 body.dark .MuiPopover-root .MuiPopover-paper,
-body.dark .chatbox-wrapper h2 {
+body.dark .chatbox-wrapper .chatbox-wrapper-inner {
   box-shadow: -4px 5px #181818;
   border-color: #181818;
+}
+body.dark .chat--wrapper .chatbox-wrapper .love {
+  background-color: #3c3c3c;
+  color: var(--white);
+  border-color: #181818;
+  box-shadow: -2px 3px #181818;
 }
 
 .section__rule {

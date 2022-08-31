@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import ReactBnbGallery from "react-bnb-gallery";
+import { updateMessageAPI } from "./API";
 
 const Messages = (props) => {
   // console.log(props);
@@ -13,7 +14,7 @@ const Messages = (props) => {
     nameDevice,
     imageurl,
     id,
-    reply,
+    love = 0,
   } = props;
   const isUser =
     username === name || nameDevice === localStorage.getItem("name");
@@ -49,7 +50,30 @@ const Messages = (props) => {
     }
   }, [text]);
 
+  const onDoubleClick = async (e, id) => {
+    e.stopPropagation();
+    clearSelection();
+    // like the mesage
+    let res = await updateMessageAPI(id, love + 1);
+    console.log("res", res);
+  };
+
   const [showBox, setshowBox] = useState(false);
+
+  const onImageError = (e) => {
+    let elem = e.target;
+    elem.setAttribute("alt", "This image has been removed");
+    elem.parentNode.classList.add("error");
+  };
+
+  function clearSelection() {
+    if (document.selection && document.selection.empty) {
+      document.selection.empty();
+    } else if (window.getSelection) {
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+    }
+  }
 
   return (
     <>
@@ -60,7 +84,11 @@ const Messages = (props) => {
         key={index}
         id={id}
       >
-        <div className="chatbox-wrapper-inner">
+        <div
+          className="chatbox-wrapper-inner"
+          onDoubleClick={(e) => onDoubleClick(e, id)}
+          title={"double click to live the message"}
+        >
           {imageurl && (
             <>
               <div className="image--wrapper" onClick={() => setshowBox(true)}>
@@ -69,12 +97,14 @@ const Messages = (props) => {
                     "/upload/",
                     "/upload/c_thumb,w_200,g_face/"
                   )}
-                  alt="if you are seeing this means this images had been deleted."
+                  alt="chat anonyymously"
+                  onError={onImageError}
                 />
               </div>
               <ReactBnbGallery
                 show={showBox}
                 photos={imageurl}
+                showThumbnails={false}
                 onClose={() => setshowBox(false)}
               />
             </>
@@ -102,6 +132,12 @@ const Messages = (props) => {
                   })
                 : text}
             </h2>
+          )}
+          {love > 0 && (
+            <div className="love noselect">
+              <span>💖</span>
+              <span className="numb">{love}</span>
+            </div>
           )}
         </div>
         <Tooltip

@@ -26,12 +26,12 @@ export const sendMessageAPI = async (data) => {
 };
 
 // update message
-export const updateMessageAPI = async () => {
-  const messageRef = doc(db, "chat13", "NIFdnCB4m9GVLNrR6FK1");
+export const updateMessageAPI = async (id, love) => {
+  const messageRef = doc(db, "chat13", id);
 
   return new Promise(async (resolve, reject) => {
     try {
-      let resp = await updateDoc(messageRef, { text: "weuhawdgha" });
+      let resp = await updateDoc(messageRef, { love: love });
       resolve(resp);
       // console.log("Document written with ID: ", docRef.id);
     } catch (e) {
