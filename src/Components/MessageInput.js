@@ -32,7 +32,7 @@ const MessageInput = ({ send, text, handleChange, imageurl }) => {
         .then((resp) => {
           if (resp) {
             handleChange("imageurl", resp?.url);
-            console.log("resp", resp);
+            // console.log("resp", resp);
             setImgObj({
               ...imgObj,
               publicId: resp.public_id,
@@ -55,7 +55,7 @@ const MessageInput = ({ send, text, handleChange, imageurl }) => {
       deleteImageAPI(imgObj)
         .then((resp) => {
           if (resp) {
-            console.log("resp deleteImageAPI", resp);
+            // console.log("resp deleteImageAPI", resp);
             setImgObj({ ...imgObj, publicId: "", signature: "", time: "" });
           }
         })

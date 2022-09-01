@@ -22,7 +22,52 @@ const Messages = (props) => {
   const [textArray, setTextArray] = useState([]);
   const [islLnk, setIslLnk] = useState(false);
 
-  // useState
+  // image popup
+  const [showBox, setshowBox] = useState(false);
+
+  const onImageError = (e) => {
+    let elem = e.target;
+    elem.setAttribute("alt", "This image has been removed");
+    elem.parentNode.classList.add("error");
+  };
+
+  function clearSelection() {
+    if (document.selection && document.selection.empty) {
+      document.selection.empty();
+    } else if (window.getSelection) {
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+    }
+  }
+
+  // liking the message box
+  const onDoubleClick = async (e, id) => {
+    e.stopPropagation();
+    clearSelection();
+    // like the mesage
+    await updateMessageAPI(id, love + 1);
+    EditLocalStorage(id);
+
+    // setuserLiked((userLiked) => [...userLiked, id]);
+    // localStorage.setItem("userLiked", [...userLiked]);
+  };
+
+  const EditLocalStorage = (id) => {
+    let userLiked = localStorage.getItem("userLiked");
+    let tempArray;
+
+    if (userLiked) {
+      tempArray = [
+        ...new Set([id, ...JSON.parse(localStorage.getItem("userLiked"))]),
+      ];
+    } else {
+      tempArray = [id];
+    }
+
+    // console.log("tempArray", tempArray);
+    tempArray = JSON.stringify(tempArray);
+    localStorage.setItem("userLiked", tempArray);
+  };
 
   // convert time into readable formate
   useEffect(() => {
@@ -49,31 +94,6 @@ const Messages = (props) => {
       setTextArray(temp);
     }
   }, [text]);
-
-  const onDoubleClick = async (e, id) => {
-    e.stopPropagation();
-    clearSelection();
-    // like the mesage
-    let res = await updateMessageAPI(id, love + 1);
-    console.log("res", res);
-  };
-
-  const [showBox, setshowBox] = useState(false);
-
-  const onImageError = (e) => {
-    let elem = e.target;
-    elem.setAttribute("alt", "This image has been removed");
-    elem.parentNode.classList.add("error");
-  };
-
-  function clearSelection() {
-    if (document.selection && document.selection.empty) {
-      document.selection.empty();
-    } else if (window.getSelection) {
-      var sel = window.getSelection();
-      sel.removeAllRanges();
-    }
-  }
 
   return (
     <>
@@ -134,7 +154,10 @@ const Messages = (props) => {
             </h2>
           )}
           {love > 0 && (
-            <div className="love noselect">
+            <div
+              className="love noselect"
+              onClick={(e) => onDoubleClick(e, id)}
+            >
               <span>💖</span>
               <span className="numb">{love}</span>
             </div>
