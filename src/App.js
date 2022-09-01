@@ -4,7 +4,7 @@ import Personalized from "./Components/Personalized";
 import MessageWrapper from "./Components/MessageWrapper";
 import MessageInput from "./Components/MessageInput";
 // import Welcome from "./Components/Welcome";
-import { sendMessageAPI } from "./Components/API";
+import { sendMessageAPI, uuid } from "./Components/API";
 
 function App() {
   const [data, setData] = useState({
@@ -49,26 +49,17 @@ function App() {
       });
   };
 
-  // this uniqid will work as user id to detech who is sending a message
+  // this uniqid will work as user id to detect who is sending a message
   const getUniqId = () => {
-    fetch("https://www.uuidtools.com/api/generate/v1/count/1")
-      .then((response) => response.json())
-      .then((data) => {
-        const id = data[0];
-        handleChange("nameDevice", id || "NA");
-        handleChange("username", id);
-        // setting usernaeme from fetch
-        if (localStorage.getItem("name")) {
-          handleChange("nameDevice", localStorage.getItem("name"));
-        } else if (id) {
-          localStorage.setItem("name", `${id}`);
-        } else {
-          localStorage.setItem("name", "unknown");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    // before generation new id lets check on localStorage
+    if (localStorage.getItem("name")) {
+      handleChange("nameDevice", localStorage.getItem("name"));
+    } else {
+      const id = uuid();
+      localStorage.setItem("name", id);
+      handleChange("nameDevice", id || "NA");
+      handleChange("username", id || "NA");
+    }
   };
 
   // add location
