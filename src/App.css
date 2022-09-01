@@ -62,7 +62,8 @@ body.dark .MuiPopover-paper .MuiFormControlLabel-root {
   fill: #fff;
 }
 
-body.dark .chatbox-wrapper.active .chatbox-wrapper-inner {
+body.dark .chatbox-wrapper.active .chatbox-wrapper-inner,
+body.dark .chat--wrapper .chatbox-wrapper.liked .love {
   background-color: #fff;
   color: var(--dark);
 }

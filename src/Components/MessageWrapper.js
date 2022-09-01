@@ -54,6 +54,7 @@ const MessageWrapper = () => {
 
         // console.log("initData", initData);
         setAddedMessage(initData);
+
         scrollToBottom();
 
         // setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
@@ -64,6 +65,10 @@ const MessageWrapper = () => {
       const docSnap = await getDocs(dataRef);
       // to last visible item
       setLastVisible(docSnap2.docs[0]);
+      // if (countMessage > docSnap.size) {
+      //   scrollToBottom();
+      // }
+      console.log("docSnap", docSnap.size);
       setCountMessage(docSnap.size);
     };
 

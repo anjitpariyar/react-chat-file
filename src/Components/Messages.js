@@ -22,6 +22,9 @@ const Messages = (props) => {
   const [textArray, setTextArray] = useState([]);
   const [islLnk, setIslLnk] = useState(false);
 
+  // loved by user or not
+  const [isloved, setLoved] = useState(false);
+
   // image popup
   const [showBox, setshowBox] = useState(false);
 
@@ -44,12 +47,13 @@ const Messages = (props) => {
   const onDoubleClick = async (e, id) => {
     e.stopPropagation();
     clearSelection();
-    // like the mesage
-    await updateMessageAPI(id, love + 1);
-    EditLocalStorage(id);
-
-    // setuserLiked((userLiked) => [...userLiked, id]);
-    // localStorage.setItem("userLiked", [...userLiked]);
+    if (!isloved) {
+      // like the mesage
+      e.currentTarget.closest(".chatbox-wrapper").classList.add("liked");
+      setLoved(true);
+      await updateMessageAPI(id, love + 1);
+      EditLocalStorage(id);
+    }
   };
 
   const EditLocalStorage = (id) => {
@@ -67,6 +71,17 @@ const Messages = (props) => {
     // console.log("tempArray", tempArray);
     tempArray = JSON.stringify(tempArray);
     localStorage.setItem("userLiked", tempArray);
+  };
+
+  // for loved check
+  const lovedCheck = (id) => {
+    let userLiked = localStorage.getItem("userLiked");
+    if (userLiked) {
+      let userLikedParse = JSON.parse(userLiked);
+      if (userLikedParse.includes(id)) {
+        setLoved(true);
+      }
+    }
   };
 
   // convert time into readable formate
@@ -95,11 +110,18 @@ const Messages = (props) => {
     }
   }, [text]);
 
+  // just calling loved checkfunction on refresh
+  useEffect(() => {
+    lovedCheck(id);
+  }, [id]);
+
   return (
     <>
       <div
         className={
-          isUser ? "active chatbox-wrapper" : "unknown chatbox-wrapper"
+          (isUser ? "active chatbox-wrapper" : "unknown chatbox-wrapper") +
+          " " +
+          (isloved ? " liked " : " ")
         }
         key={index}
         id={id}
@@ -157,6 +179,11 @@ const Messages = (props) => {
             <div
               className="love noselect"
               onClick={(e) => onDoubleClick(e, id)}
+              title={
+                isloved
+                  ? "I cannot belive you liked this"
+                  : "Once you love someone, you cannot go back"
+              }
             >
               <span>💖</span>
               <span className="numb">{love}</span>
