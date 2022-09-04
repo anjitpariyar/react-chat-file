@@ -215,6 +215,7 @@ button svg {
     height: 46px;
     /* border-width: 5px; */
     padding: 0 14px;
+    padding-right: ;
   }
   .section__rule {
     width: 95%;
