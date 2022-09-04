@@ -28,6 +28,9 @@ const MessageWrapper = () => {
   // to know how many total message in the data base
   const [countMessage, setCountMessage] = useState(0);
 
+  // scroll effect  on infinite scroll
+  const [isScrollTop, setIsScrollTop] = useState(false);
+
   const [pageSize, setPageSize] = useState(0);
 
   // firebase Ref
@@ -36,86 +39,94 @@ const MessageWrapper = () => {
   // last visible item
   const [lastVisible, setLastVisible] = useState(null);
 
+  // unsub function
+  const [unsunbFunct, setunsunbFunct] = useState(() => {});
+
   // state data for starting 20 data
   useEffect(() => {
     const firstQuery = query(
       dataRef,
       orderBy("timestamp", "asc"),
-      limitToLast(20)
+      limitToLast(pageSize * 20 + 20)
     );
+    if (pageSize > 0) {
+      unsunbFunct();
+    }
 
     const fetchData = async () => {
       // for snapshot
-      onSnapshot(firstQuery, (querySnapshot) => {
+      const unsub = onSnapshot(firstQuery, (querySnapshot) => {
         const initData = [];
         querySnapshot.forEach((doc) => {
           initData.push({ id: doc.id, data: doc.data() });
         });
-
-        // console.log("initData", initData);
         setAddedMessage(initData);
-
-        scrollToBottom();
-
-        // setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
       });
+      setunsunbFunct(() => unsub);
+
       const docSnap2 = await getDocs(firstQuery);
 
-      // to count the data
-      const docSnap = await getDocs(dataRef);
       // to last visible item
       setLastVisible(docSnap2.docs[0]);
-      // if (countMessage > docSnap.size) {
-      //   scrollToBottom();
-      // }
-      console.log("docSnap", docSnap.size);
-      setCountMessage(docSnap.size);
+    };
+
+    // for total data on snapshot
+    const countTotal = async () => {
+      onSnapshot(dataRef, (querySnapshot) => {
+        setCountMessage(querySnapshot.size);
+      });
     };
 
     fetchData();
-
+    countTotal();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [pageSize]);
 
   // added data when scrolling is update
   useEffect(() => {
     if (pageSize > 0) {
       // console.log("pageSize", lastVisible.data().text);
-      const nextQuery = query(
-        dataRef,
-        orderBy("timestamp", "asc"),
-        endBefore(lastVisible),
-        limitToLast(20)
-      );
+      // const nextQuery = query(
+      //   dataRef,
+      //   orderBy("timestamp", "asc"),
+      //   endBefore(lastVisible),
+      //   limitToLast(20)
+      // );
+      // const fetchData = async () => {
+      //   const querySnapshot = await getDocs(nextQuery);
+      //   const addedData = [];
+      //   setLastVisible(querySnapshot.docs[0]);
+      //   querySnapshot.forEach((doc) => {
+      //     addedData.push({ id: doc.id, data: doc.data() });
+      //   });
+      //   // console.log("add", addedData);
+      //   setAddedMessage((messageAdded) => [
+      //     ...new Set([...addedData, ...messageAdded]),
+      //   ]);
 
-      const fetchData = async () => {
-        const querySnapshot = await getDocs(nextQuery);
-        const addedData = [];
-        setLastVisible(querySnapshot.docs[0]);
-        querySnapshot.forEach((doc) => {
-          addedData.push({ id: doc.id, data: doc.data() });
-        });
-        // console.log("add", addedData);
-        setAddedMessage((messageAdded) => [
-          ...new Set([...addedData, ...messageAdded]),
-        ]);
-      };
-      fetchData();
+      //   // if (querySnapshot.size > 0) {
+
+      //   // }
+      // };
+      // fetchData();
+      setIsScrollTop(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageSize]);
 
-  // scroll into view
   useEffect(() => {
-    // if pagesige is 0 then its a first page
-    // console.log("pageSize for message added", pageSize);
-    if (pageSize === 0) {
-      scrollToBottom();
-    } else {
+    // console.log("scrollTop");
+    if (isScrollTop) {
       scrollToTop();
+      setIsScrollTop(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messageAdded]);
+
+  useEffect(() => {
+    // no question on message added
+    scrollToBottom();
+  }, [countMessage]);
 
   const chatRef = useRef(null);
 
@@ -133,10 +144,6 @@ const MessageWrapper = () => {
   };
 
   const messagesEndRef = useRef(null);
-
-  // down to bottom whenever data changed only on message change
-  // useEffect(scrollToBottom, [message]);
-  // useEffect(() => console.log("messageAdded", messageAdded), [messageAdded]);
 
   // detect the view of loader
   const { ref, inView } = useInView({

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./messageinput.styled.scss";
 import PhotoRoundedIcon from "@mui/icons-material/PhotoRounded";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -22,9 +22,10 @@ const MessageInput = ({ send, text, handleChange, imageurl }) => {
     time: "",
   });
 
-  const ImageUpload = (event) => {
+  const ImageUpload = (event, fileSource) => {
     setLoader(true);
-    const file = event.target.files[0];
+
+    const file = event ? event.target.files[0] : fileSource;
     if (file.size / (1024 * 1024) > 5) {
       alert("you can only upload images under 5MB");
     } else {
@@ -65,6 +66,20 @@ const MessageInput = ({ send, text, handleChange, imageurl }) => {
         });
     }
   };
+
+  // useEffect
+  useEffect(() => {
+    document.onpaste = function (event) {
+      const item = (event.clipboardData || event.originalEvent.clipboardData)
+        .items[0];
+      // console.log("item", item);
+
+      if (item.type.indexOf("image") !== -1) {
+        let file = item.getAsFile();
+        ImageUpload(0, file);
+      }
+    };
+  }, []);
 
   return (
     <form method="" action="#!" onSubmit={send} className="messageInput">

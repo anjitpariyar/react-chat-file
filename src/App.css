@@ -119,21 +119,9 @@ form {
   opacity: 1;
   font-weight: 500;
 }
-form button {
-  border: 0;
-  background-color: transparent;
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  padding: 20px;
-  color: var(--dark);
-}
 button svg {
   fill: var(--dark);
 }
-
 .personalized {
   position: fixed;
   z-index: 99;

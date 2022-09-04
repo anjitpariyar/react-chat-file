@@ -45,8 +45,9 @@ const Messages = (props) => {
 
   // liking the message box
   const onDoubleClick = async (e, id) => {
-    e.stopPropagation();
+    e.preventDefault();
     clearSelection();
+    // !isloved
     if (!isloved) {
       // like the mesage
       e.currentTarget.closest(".chatbox-wrapper").classList.add("liked");
