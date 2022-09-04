@@ -70,7 +70,7 @@ export const deleteImageAPI = async ({ publicId, signature, time }) => {
   const formData = new FormData();
   formData.append("public_id", publicId);
   formData.append("signature", signature);
-  formData.append("api_key", process.env.REACT_APP_API_KEY);
+  formData.append("api_key", process.env.REACT_APP_CLOUD_API_KEY);
   formData.append("timestamp", time);
   try {
     const res = await axios.post(
