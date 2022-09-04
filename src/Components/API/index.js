@@ -11,7 +11,7 @@ import {
 export const sendMessageAPI = async (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let { id } = await addDoc(collection(db, "chat13"), {
+      let { id } = await addDoc(collection(db, "chat12"), {
         ...data,
         timestamp: serverTimestamp(),
       });
@@ -27,7 +27,7 @@ export const sendMessageAPI = async (data) => {
 
 // update message
 export const updateMessageAPI = async (id, love) => {
-  const messageRef = doc(db, "chat13", id);
+  const messageRef = doc(db, "chat12", id);
 
   return new Promise(async (resolve, reject) => {
     try {

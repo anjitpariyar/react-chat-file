@@ -34,7 +34,7 @@ const MessageWrapper = () => {
   const [pageSize, setPageSize] = useState(0);
 
   // firebase Ref
-  const dataRef = collection(db, "chat13");
+  const dataRef = collection(db, "chat12");
 
   // last visible item
   // eslint-disable-next-line no-unused-vars
