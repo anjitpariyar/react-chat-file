@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Personalized from "./Components/Personalized";
 import MessageWrapper from "./Components/MessageWrapper";
 import MessageInput from "./Components/MessageInput";
-// import Welcome from "./Components/Welcome";
+import Welcome from "./Components/Welcome";
 import { sendMessageAPI, uuid } from "./Components/API";
 
 function App() {
@@ -114,7 +114,7 @@ function App() {
         </section>
       </div>
 
-      {/* <Welcome /> */}
+      <Welcome />
     </div>
   );
 }
