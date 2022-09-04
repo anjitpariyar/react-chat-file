@@ -1,6 +1,6 @@
 {
   "name": "chat-anonymously",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "private": true,
   "author": "anjit pariyar",
   "dependencies": {

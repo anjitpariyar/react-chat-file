@@ -136,10 +136,7 @@ const Messages = (props) => {
             <>
               <div className="image--wrapper" onClick={() => setshowBox(true)}>
                 <img
-                  src={imageurl.replace(
-                    "/upload/",
-                    "/upload/c_thumb,w_200,g_face/"
-                  )}
+                  src={imageurl.replace("/upload/", "/upload/c_thumb,w_200/")}
                   alt="chat anonyymously"
                   onError={onImageError}
                 />

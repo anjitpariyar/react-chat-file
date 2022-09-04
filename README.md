@@ -29,6 +29,6 @@ don't kill anyone
 
 ## :handshake: Contact
 
-Your Name - [Instagram](https://www.instagram.com/limbo_anj/) - anjitpariyar@gmail.com
+Anjit pariyar - [Instagram](https://www.instagram.com/limbo_anj/) - anjitpariyar@gmail.com
 
-Portfolio: [https://anjitpariyar.vercel.app/](https://anjitpariyar.vercel.app/)
+Portfolio: [https://anjitpariyar.com.np/](https://anjitpariyar.com.np/)

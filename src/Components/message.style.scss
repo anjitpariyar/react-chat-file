@@ -111,7 +111,7 @@
       max-width: 100%;
       .image--wrapper {
         min-height: 70px;
-        height: 130px;
+        // height: 130px;
       }
     }
     .chatbox-wrapper time {
@@ -130,6 +130,15 @@
       .chatbox-wrapper-inner {
         margin: 10px;
       }
+    }
+  }
+
+  .gallery {
+    .gallery-photo {
+      padding-bottom: 120%;
+    }
+    ul.gallery-images--ul li.gallery-media-photo .picture img.photo {
+      max-width: 98%;
     }
   }
 }

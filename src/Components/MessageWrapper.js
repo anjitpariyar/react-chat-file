@@ -15,7 +15,7 @@ import {
   getDocs,
   limitToLast,
   onSnapshot,
-  endBefore,
+  // endBefore,
 } from "firebase/firestore";
 
 const MessageWrapper = () => {
@@ -37,6 +37,7 @@ const MessageWrapper = () => {
   const dataRef = collection(db, "chat13");
 
   // last visible item
+  // eslint-disable-next-line no-unused-vars
   const [lastVisible, setLastVisible] = useState(null);
 
   // unsub function
@@ -131,7 +132,9 @@ const MessageWrapper = () => {
   const chatRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef?.current?.scrollIntoView({ behavior: "auto" });
+    if (messagesEndRef?.current) {
+      messagesEndRef?.current?.scrollIntoView({ behavior: "auto" });
+    }
   };
 
   const scrollToTop = () => {

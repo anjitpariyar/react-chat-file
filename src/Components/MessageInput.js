@@ -79,6 +79,7 @@ const MessageInput = ({ send, text, handleChange, imageurl }) => {
         ImageUpload(0, file);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
